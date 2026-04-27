@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBCS CMS-1500 & Coding Workflow Interactive Lab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#F5F2EE;--bg2:#FFF9F4;--card:#FFFFFF;
+  --tx:#1E1B18;--tx2:#5A5550;--tx3:#9A9590;
+  --pri:#1565C0;--pri2:#0D47A1;--priL:#E3F2FD;
+  --grn:#2E7D32;--grnL:#E8F5E9;--grn2:#1B5E20;
+  --org:#E65100;--orgL:#FFF3E0;
+  --red:#C62828;--redL:#FFEBEE;
+  --pur:#6A1B9A;--purL:#F3E5F5;
+  --teal:#00838F;--tealL:#E0F7FA;
+  --gold:#F9A825;--goldL:#FFFDE7;
+  --bdr:#E0DBD5;--shd:0 2px 12px rgba(30,27,24,.06);
+  --shd2:0 8px 32px rgba(30,27,24,.10);
+  --r:10px;--r2:16px;--r3:24px;
+  --hd:'DM Serif Display',Georgia,serif;
+  --bd:'Nunito Sans','Segoe UI',sans-serif;
+  --mn:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--bd);background:var(--bg);color:var(--tx);line-height:1.7;font-size:15px}
+
+/* ===== HEADER ===== */
+.hdr{background:linear-gradient(135deg,#FFF,var(--bg2));border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:1000;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.hdr-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;max-width:1400px;margin:0 auto}
+.hdr-logo{display:flex;align-items:center;gap:12px}
+.hdr-logo h1{font-family:var(--hd);font-size:17px;color:var(--pri2);line-height:1.2}
+.hdr-logo span{font-size:11px;color:var(--tx3);letter-spacing:.5px}
+.hdr-stats{display:flex;gap:14px;align-items:center}
+.pill{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:16px;font-size:12px;font-weight:700}
+.pill-score{background:var(--grnL);color:var(--grn2)}
+.pill-streak{background:var(--goldL);color:#F57F17}
+.pill-badge{background:var(--purL);color:var(--pur)}
+.snd-btn{padding:4px 10px;border-radius:12px;border:1px solid var(--bdr);background:var(--bg);font-size:11px;font-weight:600;color:var(--tx2);cursor:pointer}
+.gprog{height:4px;background:var(--bdr)}
+.gprog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--pri),var(--pur));width:0%;transition:width .8s var(--ease);border-radius:0 2px 2px 0}
+
+/* ===== NAV ===== */
+.nav-w{background:var(--card);border-bottom:1px solid var(--bdr);overflow-x:auto;scrollbar-width:none}
+.nav-w::-webkit-scrollbar{display:none}
+.nav{display:flex;max-width:1400px;margin:0 auto;padding:0 12px;gap:1px}
+.nav-btn{flex-shrink:0;padding:10px 14px;border:none;background:0;font-family:var(--bd);font-size:12px;font-weight:500;color:var(--tx2);cursor:pointer;border-bottom:3px solid transparent;transition:.3s var(--ease);white-space:nowrap}
+.nav-btn:hover{color:var(--pri);background:var(--priL)}
+.nav-btn.act{color:var(--pri2);font-weight:700;border-bottom-color:var(--pri)}
+.nav-btn .tn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--bdr);font-size:9px;font-weight:800;margin-right:4px}
+.nav-btn.act .tn{background:var(--pri);color:#fff}
+.nav-btn.done .tn{background:var(--grn);color:#fff}
+
+/* ===== MAIN ===== */
+.main{max-width:1100px;margin:0 auto;padding:28px 20px 80px}
+.pnl{display:none;animation:fadeUp .45s var(--ease)}
+.pnl.act{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ===== SECTION HEADER ===== */
+.sh{text-align:center;padding:36px 16px;margin-bottom:32px;border-radius:var(--r3);border:1px solid var(--bdr)}
+.sh.blue{background:linear-gradient(135deg,var(--priL),#FFF,var(--tealL))}
+.sh.green{background:linear-gradient(135deg,var(--grnL),#FFF,var(--priL))}
+.sh.purple{background:linear-gradient(135deg,var(--purL),#FFF,var(--tealL))}
+.sh.orange{background:linear-gradient(135deg,var(--orgL),#FFF,var(--grnL))}
+.sh.teal{background:linear-gradient(135deg,var(--tealL),#FFF,var(--purL))}
+.sh h2{font-family:var(--hd);font-size:26px;color:var(--pri2);margin-bottom:6px}
+.sh p{font-size:15px;color:var(--tx2);max-width:600px;margin:0 auto}
+
+/* ===== CARD ===== */
+.cd{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r2);padding:24px;margin-bottom:20px;box-shadow:var(--shd);transition:.3s var(--ease)}
+.cd:hover{box-shadow:var(--shd2);transform:translateY(-2px)}
+.cd h3{font-family:var(--hd);font-size:19px;margin-bottom:10px;color:var(--tx)}
+.cd h4{font-size:15px;font-weight:700;margin-bottom:8px}
+
+/* ===== BADGES ===== */
+.bg{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.bg-b{background:var(--priL);color:var(--pri)}
+.bg-g{background:var(--grnL);color:var(--grn)}
+.bg-o{background:var(--orgL);color:var(--org)}
+.bg-r{background:var(--redL);color:var(--red)}
+.bg-p{background:var(--purL);color:var(--pur)}
+.bg-t{background:var(--tealL);color:var(--teal)}
+
+/* ===== ACCORDION ===== */
+.acc-item{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:6px;overflow:hidden}
+.acc-btn{width:100%;padding:14px 18px;background:0;border:0;font-family:var(--bd);font-size:14px;font-weight:600;color:var(--tx);cursor:pointer;display:flex;align-items:center;justify-content:space-between;text-align:left}
+.acc-btn:hover{background:var(--bg2)}
+.acc-chv{width:18px;height:18px;transition:transform .3s;color:var(--tx3);flex-shrink:0}
+.acc-item.open .acc-chv{transform:rotate(180deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .3s}
+.acc-item.open .acc-body{max-height:3000px;padding:0 18px 18px}
+
+/* ===== QUIZ / INTERACTIVE ===== */
+.quiz{background:var(--card);border:2px solid var(--bdr);border-radius:var(--r2);padding:24px;margin:18px 0}
+.quiz h4{font-family:var(--hd);color:var(--pri2);margin-bottom:10px;font-size:16px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.opt{padding:9px 18px;border-radius:var(--r);border:2px solid var(--bdr);background:var(--card);font-family:var(--bd);font-size:13px;cursor:pointer;transition:.25s var(--ease)}
+.opt:hover{border-color:var(--pri);background:var(--priL)}
+.opt.cor{border-color:var(--grn);background:var(--grnL);color:var(--grn2)}
+.opt.inc{border-color:var(--red);background:var(--redL);color:var(--red)}
+.opt.dis{pointer-events:none}
+.fb{margin-top:10px;padding:12px 16px;border-radius:var(--r);font-size:13px;display:none}
+.fb.cor{display:block;background:var(--grnL);border:1px solid #A5D6A7;color:var(--grn2)}
+.fb.inc{display:block;background:var(--redL);border:1px solid #EF9A9A;color:var(--red)}
+
+/* ===== SOAP NOTE ===== */
+.soap-note{background:linear-gradient(135deg,#FFFDF5,#FFF);border:1px solid #E8E0C8;border-radius:var(--r2);padding:22px;margin:16px 0;font-family:var(--mn);font-size:13px;line-height:1.8}
+.soap-note .soap-lbl{font-weight:700;color:var(--pri);margin-right:6px}
+
+/* ===== DRAG / SORT ===== */
+.sort-zone{min-height:50px;border:2px dashed var(--bdr);border-radius:var(--r);padding:10px;margin:8px 0;transition:.25s}
+.sort-zone.over{border-color:var(--pri);background:var(--priL)}
+.sort-chip{display:inline-flex;padding:6px 14px;border-radius:16px;font-size:12px;font-weight:600;margin:4px;cursor:grab;transition:.2s;user-select:none}
+.sort-chip.s{background:#E3F2FD;color:#1565C0;border:1px solid #90CAF9}
+.sort-chip.o{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7}
+.sort-chip.a{background:#FFF3E0;color:#E65100;border:1px solid #FFCC80}
+.sort-chip.p{background:#F3E5F5;color:#6A1B9A;border:1px solid #CE93D8}
+
+/* ===== ICD LOOKUP ===== */
+.icd-panel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.icd-index,.icd-tab{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r2);padding:20px;max-height:420px;overflow-y:auto}
+.icd-index{border-left:4px solid var(--pri)}
+.icd-tab{border-left:4px solid var(--grn)}
+.icd-index h4{color:var(--pri);font-size:14px;margin-bottom:12px}
+.icd-tab h4{color:var(--grn);font-size:14px;margin-bottom:12px}
+.idx-main{font-weight:700;font-size:14px;color:var(--tx);margin:8px 0 2px;font-family:var(--mn)}
+.idx-sub{padding-left:20px;font-size:13px;color:var(--tx2);cursor:pointer;padding:3px 6px;border-radius:4px;transition:.2s;font-family:var(--mn)}
+.idx-sub:hover{background:var(--priL);color:var(--pri)}
+.idx-sub.sel{background:var(--pri);color:#fff}
+.idx-sub2{padding-left:40px;font-size:12px;color:var(--tx3);cursor:pointer;padding:3px 6px;border-radius:4px;transition:.2s;font-family:var(--mn)}
+.idx-sub2:hover{background:var(--priL);color:var(--pri)}
+.tab-entry{padding:8px 12px;border-radius:var(--r);margin:4px 0;font-size:13px;border:1px solid var(--bdr);transition:.2s;cursor:pointer}
+.tab-entry:hover{background:var(--grnL)}
+.tab-entry.sel{background:var(--grnL);border-color:var(--grn)}
+.tab-code{font-family:var(--mn);font-weight:700;color:var(--grn)}
+.tab-desc{color:var(--tx2);margin-left:8px}
+
+/* ===== CMS-1500 FORM ===== */
+.cms-form{background:#FFF;border:2px solid var(--pri);border-radius:var(--r2);padding:0;margin:16px 0;overflow:hidden}
+.cms-hdr{background:var(--pri);color:#fff;padding:12px 20px;font-family:var(--hd);font-size:16px;display:flex;justify-content:space-between;align-items:center}
+.cms-section{padding:16px 20px;border-bottom:1px solid #E3F2FD}
+.cms-section:last-child{border-bottom:0}
+.cms-section h5{font-size:12px;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.cms-row{display:grid;gap:10px;margin-bottom:10px}
+.cms-row.r2{grid-template-columns:1fr 1fr}
+.cms-row.r3{grid-template-columns:1fr 1fr 1fr}
+.cms-row.r4{grid-template-columns:1fr 1fr 1fr 1fr}
+.cms-field{position:relative}
+.cms-field label{display:block;font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px}
+.cms-field input,.cms-field select{width:100%;padding:7px 10px;border:1px solid var(--bdr);border-radius:4px;font-family:var(--mn);font-size:12px;transition:.2s}
+.cms-field input:focus,.cms-field select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(21,101,192,.12)}
+.cms-field .tip{display:none;position:absolute;top:100%;left:0;right:0;background:var(--priL);border:1px solid #90CAF9;border-radius:4px;padding:6px 10px;font-size:11px;color:var(--pri2);z-index:10;margin-top:2px;box-shadow:var(--shd)}
+.cms-field:focus-within .tip{display:none!important}
+
+/* Item 21 Diagnosis Area */
+.dx-grid{display:grid;grid-template-columns:40px 1fr;gap:4px;align-items:center}
+.dx-ltr{font-family:var(--mn);font-weight:700;font-size:14px;color:var(--pri);text-align:center}
+
+/* Item 24 Service Lines */
+.svc-table{width:100%;border-collapse:collapse;font-size:12px}
+.svc-table th{background:var(--priL);color:var(--pri2);padding:6px 8px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;border:1px solid #BBDEFB}
+.svc-table td{padding:4px 6px;border:1px solid var(--bdr)}
+.svc-table input{width:100%;border:none;font-family:var(--mn);font-size:12px;padding:4px;background:transparent}
+.svc-table input:focus{outline:none;background:var(--priL)}
+
+/* ===== PATIENT CARD ===== */
+.pt-card{background:linear-gradient(135deg,var(--priL),#FFF);border:1px solid #BBDEFB;border-radius:var(--r2);padding:20px;margin:12px 0}
+.pt-card h4{color:var(--pri2);margin-bottom:8px}
+.pt-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px}
+.pt-info .lbl{font-weight:700;color:var(--tx2)}
+
+/* ===== TIMER ===== */
+.timer{font-family:var(--mn);font-size:24px;font-weight:700;color:var(--red);text-align:center;margin:12px 0}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:20px;border:none;font-family:var(--bd);font-size:14px;font-weight:600;cursor:pointer;transition:.3s var(--ease)}
+.btn-pri{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;box-shadow:0 4px 14px rgba(21,101,192,.25)}
+.btn-pri:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(21,101,192,.35)}
+.btn-sec{border:2px solid var(--pri);background:0;color:var(--pri)}
+.btn-sec:hover{background:var(--pri);color:#fff}
+.btn-grn{background:linear-gradient(135deg,var(--grn),var(--grn2));color:#fff;box-shadow:0 4px 14px rgba(46,125,50,.25)}
+.btn-grn:hover{transform:translateY(-2px)}
+.btn-comp{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--r);border:2px solid var(--grn);background:var(--grnL);color:var(--grn2);font-family:var(--bd);font-size:15px;font-weight:700;cursor:pointer;transition:.3s;margin-top:24px}
+.btn-comp:hover{background:var(--grn);color:#fff}
+.btn-comp.dn{background:var(--grn);color:#fff;cursor:default}
+
+/* ===== CALLOUT ===== */
+.clt{border-radius:var(--r);padding:14px 18px;margin:14px 0;font-size:13px}
+.clt.tip{background:var(--grnL);border:1px solid #A5D6A7;border-left:4px solid var(--grn)}
+.clt.warn{background:var(--orgL);border:1px solid #FFCC80;border-left:4px solid var(--org)}
+.clt.info{background:var(--priL);border:1px solid #90CAF9;border-left:4px solid var(--pri)}
+.clt-lbl{font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.clt.tip .clt-lbl{color:var(--grn)}
+.clt.warn .clt-lbl{color:var(--org)}
+.clt.info .clt-lbl{color:var(--pri)}
+
+/* ===== REVEAL ===== */
+.rev-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 16px;border-radius:16px;border:2px solid var(--grn);background:0;color:var(--grn);font-family:var(--bd);font-size:13px;font-weight:600;cursor:pointer;transition:.25s}
+.rev-btn:hover{background:var(--grn);color:#fff}
+.rev-c{display:none;margin-top:10px;padding:14px;border-radius:var(--r);animation:fadeIn .3s}
+.rev-c.show{display:block}
+.rev-c.model{background:var(--grnL);border:1px solid #A5D6A7}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:70px;right:20px;padding:10px 18px;border-radius:var(--r);background:var(--grn);color:#fff;font-weight:700;font-size:13px;z-index:9999;transform:translateX(120%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--shd2)}
+.toast.show{transform:translateX(0)}
+
+/* ===== SELF RATING ===== */
+.stars{display:flex;gap:4px;align-items:center}
+.stars span{font-size:13px;font-weight:600;color:var(--tx2);margin-right:6px}
+.star{width:24px;height:24px;cursor:pointer;color:var(--bdr);transition:.2s}
+.star:hover{transform:scale(1.15)}
+.star.on{color:var(--gold)}
+
+/* ===== REVIEW CARD ===== */
+.rev-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;margin:8px 0;transition:.25s}
+.rev-card:hover{border-color:var(--pri);box-shadow:var(--shd)}
+.rev-card h5{font-size:13px;font-weight:700;color:var(--pri);margin-bottom:4px}
+.rev-card p{font-size:13px;color:var(--tx2)}
+
+/* ===== PROGRESS ===== */
+.sprog{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:20px}
+.sprog-lbl{font-size:12px;font-weight:600;color:var(--tx2);white-space:nowrap}
+.sprog-bar{flex:1;height:6px;background:var(--bdr);border-radius:3px;overflow:hidden}
+.sprog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--grn));border-radius:3px;transition:width .5s}
+.sprog-pct{font-size:13px;font-weight:700;color:var(--grn);min-width:36px;text-align:right}
+
+/* ===== SUB TABS ===== */
+.stabs{display:flex;gap:3px;padding:6px;background:var(--bg);border-radius:var(--r);margin-bottom:16px;overflow-x:auto}
+.stab{padding:7px 14px;border:none;background:0;border-radius:var(--r);font-family:var(--bd);font-size:12px;font-weight:500;color:var(--tx2);cursor:pointer;transition:.2s;white-space:nowrap}
+.stab:hover{background:var(--card);color:var(--tx)}
+.stab.act{background:var(--card);color:var(--pri);font-weight:700;box-shadow:var(--shd)}
+.sp{display:none;animation:fadeIn .3s}.sp.act{display:block}
+
+/* ===== WORKFLOW TABS ===== */
+.wf-tabs{display:flex;gap:6px;margin:12px 0;flex-wrap:wrap}
+.wf-tab{padding:8px 16px;border-radius:var(--r);border:2px solid var(--bdr);background:var(--card);font-size:12px;font-weight:600;cursor:pointer;transition:.25s}
+.wf-tab:hover{border-color:var(--pri)}
+.wf-tab.act{background:var(--pri);color:#fff;border-color:var(--pri)}
+
+/* ===== FOOTER ===== */
+.ftr{text-align:center;padding:28px 20px;border-top:1px solid var(--bdr);background:var(--card);font-size:13px;color:var(--tx3)}
+.ftr strong{color:var(--tx);font-family:var(--hd)}
+
+/* ===== MOBILE ===== */
+.mob-menu{display:none;padding:6px;border:none;background:0;cursor:pointer;color:var(--tx)}
+@media(max-width:768px){
+  .hdr-stats{display:none}
+  .mob-menu{display:block}
+  .main{padding:16px 12px 60px}
+  .sh{padding:24px 12px}.sh h2{font-size:22px}
+  .cd{padding:18px}
+  .icd-panel{grid-template-columns:1fr}
+  .cms-row.r2,.cms-row.r3,.cms-row.r4{grid-template-columns:1fr}
+  .pt-info{grid-template-columns:1fr}
+  .nav-btn{padding:8px 10px;font-size:11px}
+}
+
+
+/* ===== UNBIASED QUIZ + NO LIVE CMS HINTS PATCH ===== */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));align-items:stretch}
+.opt{width:100%;min-height:48px;display:flex;align-items:center;justify-content:flex-start;text-align:left;line-height:1.35}
+.cms-field .tip,.cms-field:focus-within .tip{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+.answer-key-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;background:#fff}
+.answer-key-table th{background:var(--pri2);color:#fff;padding:7px;text-align:left}
+.answer-key-table td{border:1px solid var(--bdr);padding:7px;vertical-align:top}
+.answer-key-table td:nth-child(2){font-family:var(--mn);font-weight:700;color:var(--grn2)}
+.correct-answer-note{margin-top:8px;font-weight:700;color:var(--grn2)}
+
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">+10 Points!</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-logo">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="2" y="2" width="32" height="32" rx="8" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/><path d="M12 12h12M12 18h8M12 24h10" stroke="#1565C0" stroke-width="2" stroke-linecap="round"/><circle cx="27" cy="24" r="5" fill="#2E7D32" opacity=".15"/><path d="M25 24l1.5 1.5L29 23" stroke="#2E7D32" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      <div><h1>CBCS CMS-1500 & Coding Workflow Lab</h1><span>Interactive · Self-Paced · Simulation</span></div>
+    </div>
+    <div class="hdr-stats">
+      <div class="pill pill-score">⭐ <span id="scoreNum">0</span> pts</div>
+      <div class="pill pill-streak">🔥 <span id="streakNum">0</span></div>
+      <div class="pill pill-badge">🏅 <span id="badgeNum">0</span></div>
+      <button class="snd-btn" onclick="toggleSnd()" id="sndBtn">🔊 Sound</button>
+    </div>
+    <button class="mob-menu" onclick="toggleMobStats()" aria-label="Menu">☰</button>
+  </div>
+  <div class="gprog"><div class="gprog-fill" id="gProgFill"></div></div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-w"><div class="nav" id="navBar">
+  <button class="nav-btn act" data-t="0"><span class="tn">1</span>Welcome</button>
+  <button class="nav-btn" data-t="1"><span class="tn">2</span>Code Sets</button>
+  <button class="nav-btn" data-t="2"><span class="tn">3</span>SOAP Lab</button>
+  <button class="nav-btn" data-t="3"><span class="tn">4</span>Dx vs Sx vs Svc</button>
+  <button class="nav-btn" data-t="4"><span class="tn">5</span>ICD-10 Lookup</button>
+  <button class="nav-btn" data-t="5"><span class="tn">6</span>CMS-1500 Form</button>
+  <button class="nav-btn" data-t="6"><span class="tn">7</span>Multi-Patient</button>
+  <button class="nav-btn" data-t="7"><span class="tn">8</span>Challenge</button>
+  <button class="nav-btn" data-t="8"><span class="tn">9</span>Rapid Review</button>
+</div></nav>
+
+<main class="main">
+
+<!-- ======================== PANEL 0: WELCOME ======================== -->
+<div class="pnl act" id="p0">
+  <div class="sh blue">
+    <h2>Welcome to the Coding Workflow Lab</h2>
+    <p>A self-directed, interactive simulation lab for medical billing students preparing for CBCS-style coding and CMS-1500 claim form workflow.</p>
+  </div>
+
+  <div class="cd" style="text-align:center">
+    <h3>🎯 Your Learning Journey</h3>
+    <p style="margin-bottom:16px;color:var(--tx2)">Move through the tabs in order. You'll earn points, badges, and build real coding workflow skills.</p>
+    <button class="btn btn-pri" onclick="goTab(1)" style="animation:pulse 2s infinite">▶ Begin Lab</button>
+  </div>
+
+  <div style="margin-top:16px">
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>📋 How This Lab Works</span><svg class="acc-chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="acc-body"><p>Work through 9 sections. Each section teaches briefly, then immediately makes you practice. You'll use SOAP notes, code lookup tools, and a CMS-1500 practice form — just like real workflow. You can go back and forth between documentation, code reference, and claim form.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>🏆 Points, Streaks & Badges</span><svg class="acc-chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="acc-body"><p>Earn points for every correct answer. Build streaks with consecutive correct answers. Earn badges for completing sections. Your progress is tracked in the header.</p></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>🎨 Color System</span><svg class="acc-chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="acc-body">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+          <span class="bg bg-b">Blue = Concepts</span>
+          <span class="bg bg-g">Green = Correct / Model</span>
+          <span class="bg bg-o">Orange = Caution</span>
+          <span class="bg bg-r">Red = Avoid / Wrong</span>
+          <span class="bg bg-p">Purple = Advanced</span>
+          <span class="bg bg-t">Teal = Workflow</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-comp" id="comp0" onclick="compSec(0)">✓ Mark Welcome Complete</button>
+</div>
+
+<!-- ======================== PANEL 1: CODE SET REVIEW ======================== -->
+<div class="pnl" id="p1">
+  <div class="sh green">
+    <h2>Quick Code Set Review</h2>
+    <p>Review the four major code sets used in medical billing — then prove you understand them.</p>
+  </div>
+  <div class="sprog"><span class="sprog-lbl">Progress</span><div class="sprog-bar"><div class="sprog-fill" id="prog1" style="width:0%"></div></div><span class="sprog-pct" id="pct1">0%</span></div>
+
+  <!-- Prior Knowledge -->
+  <div class="quiz" id="q1pk">
+    <h4>🧠 Prior Knowledge Check</h4>
+    <p style="margin-bottom:10px;font-size:13px;color:var(--tx2)">Before we review — which code set do you think supports <strong>medical necessity</strong> on a claim?</p>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,true,'q1pk','Correct! ICD-10-CM diagnosis codes explain WHY the service was medically necessary.')">ICD-10-CM diagnosis set</button>
+      <button class="opt" onclick="chk(this,false,'q1pk','Not quite. CPT describes WHAT was done, not WHY it was needed.')">CPT procedure code set</button>
+      <button class="opt" onclick="chk(this,false,'q1pk','Not quite. HCPCS Level II covers supplies and specific services, not the reason for the visit.')">HCPCS Level II supply set</button>
+      <button class="opt" onclick="chk(this,false,'q1pk','Not quite. ICD-10-PCS is only for inpatient hospital procedures.')">ICD-10-PCS inpatient set</button>
+    </div>
+    <div class="fb" id="q1pk-fb"></div>
+  </div>
+
+  <!-- Code Set Cards -->
+  <div class="cd">
+    <h3>The Four Code Sets</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <div style="background:var(--priL);border-radius:var(--r);padding:16px;border-left:4px solid var(--pri)">
+        <h4 style="color:var(--pri)">ICD-10-CM</h4>
+        <p style="font-size:13px">Diagnosis codes. Tells the payer <strong>WHY</strong> the service was performed. Supports <strong>medical necessity</strong>.</p>
+        <p style="font-size:11px;color:var(--tx3);margin-top:4px">Example: J06.9 (Acute upper respiratory infection)</p>
+      </div>
+      <div style="background:var(--grnL);border-radius:var(--r);padding:16px;border-left:4px solid var(--grn)">
+        <h4 style="color:var(--grn)">CPT</h4>
+        <p style="font-size:13px">Procedure/service codes. Tells the payer <strong>WHAT</strong> was done. Professional services.</p>
+        <p style="font-size:11px;color:var(--tx3);margin-top:4px">Example: 99213 (Office visit, established patient)</p>
+      </div>
+      <div style="background:var(--purL);border-radius:var(--r);padding:16px;border-left:4px solid var(--pur)">
+        <h4 style="color:var(--pur)">HCPCS Level II</h4>
+        <p style="font-size:13px">Supplies, equipment, drugs, transportation, and services <strong>not covered by CPT</strong>.</p>
+        <p style="font-size:11px;color:var(--tx3);margin-top:4px">Example: A4253 (Blood glucose test strip)</p>
+      </div>
+      <div style="background:var(--tealL);border-radius:var(--r);padding:16px;border-left:4px solid var(--teal)">
+        <h4 style="color:var(--teal)">ICD-10-PCS</h4>
+        <p style="font-size:13px"><strong>Hospital inpatient procedures only.</strong> NOT used in physician/outpatient billing.</p>
+        <p style="font-size:11px;color:var(--tx3);margin-top:4px">Example: 0DBN0ZZ (Excision of sigmoid colon)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Concept Checks -->
+  <div class="quiz" id="q1a">
+    <h4>Concept Check 1: Which code set represents the SERVICE performed?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q1a','ICD-10-CM represents the diagnosis, not the service.')">ICD-10-CM diagnosis set</button>
+      <button class="opt" onclick="chk(this,true,'q1a','Correct! CPT codes represent the procedures and services performed by the provider.')">CPT procedure code set</button>
+      <button class="opt" onclick="chk(this,false,'q1a','HCPCS Level II covers supplies and specific items, though it does represent some services.')">HCPCS Level II supply set</button>
+    </div>
+    <div class="fb" id="q1a-fb"></div>
+  </div>
+
+  <div class="quiz" id="q1b">
+    <h4>Concept Check 2: Which code set is ONLY for hospital inpatient procedures?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q1b','CPT is for professional/physician services in any setting.')">CPT procedure code set</button>
+      <button class="opt" onclick="chk(this,false,'q1b','ICD-10-CM is for diagnoses, not procedures.')">ICD-10-CM diagnosis set</button>
+      <button class="opt" onclick="chk(this,true,'q1b','Correct! ICD-10-PCS is exclusively for coding inpatient hospital procedures.')">ICD-10-PCS inpatient set</button>
+    </div>
+    <div class="fb" id="q1b-fb"></div>
+  </div>
+
+  <div class="quiz" id="q1c">
+    <h4>Concept Check 3: A patient receives a nebulizer machine at home. Which code set covers this?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q1c','CPT covers professional services, not durable medical equipment.')">CPT procedure code set</button>
+      <button class="opt" onclick="chk(this,true,'q1c','Correct! HCPCS Level II covers durable medical equipment, supplies, and items not in CPT.')">HCPCS Level II supply set</button>
+      <button class="opt" onclick="chk(this,false,'q1c','ICD-10-CM covers diagnoses, not equipment or supplies.')">ICD-10-CM diagnosis set</button>
+    </div>
+    <div class="fb" id="q1c-fb"></div>
+  </div>
+
+  <div class="quiz" id="q1d">
+    <h4>Concept Check 4: On a CMS-1500, diagnosis codes go in Item 21. These codes explain medical necessity. They come from which code set?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,true,'q1d','Correct! ICD-10-CM diagnosis codes in Item 21 explain WHY the services were medically necessary.')">ICD-10-CM diagnosis set</button>
+      <button class="opt" onclick="chk(this,false,'q1d','CPT codes go in Item 24D for procedures — not Item 21.')">CPT procedure code set</button>
+      <button class="opt" onclick="chk(this,false,'q1d','ICD-10-PCS is for inpatient facility coding only.')">ICD-10-PCS inpatient set</button>
+    </div>
+    <div class="fb" id="q1d-fb"></div>
+  </div>
+
+  <button class="btn-comp" id="comp1" onclick="compSec(1)">✓ Mark Code Set Review Complete</button>
+</div>
+
+<!-- ======================== PANEL 2: SOAP NOTE LAB ======================== -->
+<div class="pnl" id="p2">
+  <div class="sh orange">
+    <h2>SOAP Note Lab</h2>
+    <p>Learn to identify what the coder can use from documentation — the foundation of accurate coding.</p>
+  </div>
+  <div class="sprog"><span class="sprog-lbl">Progress</span><div class="sprog-bar"><div class="sprog-fill" id="prog2" style="width:0%"></div></div><span class="sprog-pct" id="pct2">0%</span></div>
+
+  <div class="cd">
+    <h3>SOAP Note Structure</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <div class="sort-chip s" style="cursor:default;margin:0;text-align:center;display:block;padding:12px"><strong>S – Subjective</strong><br><small>What the patient reports: symptoms, history, complaints</small></div>
+      <div class="sort-chip o" style="cursor:default;margin:0;text-align:center;display:block;padding:12px"><strong>O – Objective</strong><br><small>Provider findings: exam results, vitals, test results</small></div>
+      <div class="sort-chip a" style="cursor:default;margin:0;text-align:center;display:block;padding:12px"><strong>A – Assessment</strong><br><small>The provider's diagnosis or clinical impression</small></div>
+      <div class="sort-chip p" style="cursor:default;margin:0;text-align:center;display:block;padding:12px"><strong>P – Plan</strong><br><small>Treatment plan: medications, follow-up, referrals</small></div>
+    </div>
+    <div class="clt tip" style="margin-top:12px">
+      <div class="clt-lbl">Key Coding Rule</div>
+      <strong>The Assessment section contains the diagnosis.</strong> Coders look here first for the confirmed diagnosis to code. The Plan supports what services/procedures were ordered.
+    </div>
+  </div>
+
+  <!-- SOAP Sort Activity -->
+  <div class="quiz" id="q2a">
+    <h4>Sort This: Which SOAP category does this belong to?</h4>
+    <p style="font-size:14px;font-style:italic;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:var(--r)">"Patient reports sore throat for 3 days, difficulty swallowing, and low-grade fever."</p>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,true,'q2a','Correct! This is Subjective — the patient is reporting their own symptoms and history.')">S – Subjective section</button>
+      <button class="opt" onclick="chk(this,false,'q2a','Objective is what the provider observes/measures, not what the patient reports.')">O – Objective section</button>
+      <button class="opt" onclick="chk(this,false,'q2a','Assessment is the provider\'s diagnosis, not the patient\'s report.')">A – Assessment section</button>
+      <button class="opt" onclick="chk(this,false,'q2a','Plan is the treatment approach, not the patient\'s complaints.')">P – Plan section</button>
+    </div>
+    <div class="fb" id="q2a-fb"></div>
+  </div>
+
+  <div class="quiz" id="q2b">
+    <h4>Sort This: Which SOAP category?</h4>
+    <p style="font-size:14px;font-style:italic;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:var(--r)">"Throat is erythematous with tonsillar exudate. Rapid strep test positive. Temp 101.2°F."</p>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q2b','Subjective is the patient\'s own report — this is provider observation.')">S – Subjective section</button>
+      <button class="opt" onclick="chk(this,true,'q2b','Correct! These are measurable findings from the provider\'s examination and tests — Objective data.')">O – Objective section</button>
+      <button class="opt" onclick="chk(this,false,'q2b','Assessment is the diagnosis conclusion, not the raw findings.')">A – Assessment section</button>
+      <button class="opt" onclick="chk(this,false,'q2b','Plan is treatment, not examination findings.')">P – Plan section</button>
+    </div>
+    <div class="fb" id="q2b-fb"></div>
+  </div>
+
+  <div class="quiz" id="q2c">
+    <h4>Sort This: Which SOAP category?</h4>
+    <p style="font-size:14px;font-style:italic;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:var(--r)">"Acute streptococcal pharyngitis."</p>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q2c','Subjective is patient-reported symptoms.')">S – Subjective section</button>
+      <button class="opt" onclick="chk(this,false,'q2c','Objective is measurable data, not the diagnosis.')">O – Objective section</button>
+      <button class="opt" onclick="chk(this,true,'q2c','Correct! This is the Assessment — the provider\'s confirmed diagnosis. This is what the coder codes.')">A – Assessment section</button>
+      <button class="opt" onclick="chk(this,false,'q2c','Plan is treatment, not the diagnosis.')">P – Plan section</button>
+    </div>
+    <div class="fb" id="q2c-fb"></div>
+  </div>
+
+  <div class="quiz" id="q2d">
+    <h4>Sort This: Which SOAP category?</h4>
+    <p style="font-size:14px;font-style:italic;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:var(--r)">"Prescribe amoxicillin 500mg TID x 10 days. Follow up in 2 weeks if symptoms persist."</p>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q2d','This is treatment, not the patient\'s report.')">S – Subjective section</button>
+      <button class="opt" onclick="chk(this,false,'q2d','This is a treatment decision, not an exam finding.')">O – Objective section</button>
+      <button class="opt" onclick="chk(this,false,'q2d','This is a plan of action, not the diagnosis.')">A – Assessment section</button>
+      <button class="opt" onclick="chk(this,true,'q2d','Correct! Prescriptions, follow-up instructions, and referrals are part of the Plan.')">P – Plan section</button>
+    </div>
+    <div class="fb" id="q2d-fb"></div>
+  </div>
+
+  <!-- Full SOAP Note -->
+  <div class="cd">
+    <h3>Full SOAP Note Practice</h3>
+    <div class="soap-note">
+      <p><span class="soap-lbl">S:</span> 45-year-old male presents with persistent cough for 2 weeks, worse at night. Reports mild shortness of breath with exertion. No fever. Non-smoker.</p>
+      <p><span class="soap-lbl">O:</span> Lungs: bilateral wheezing on auscultation. O2 sat 96%. Chest X-ray: no infiltrates. Spirometry shows mild obstructive pattern.</p>
+      <p><span class="soap-lbl">A:</span> New-onset asthma.</p>
+      <p><span class="soap-lbl">P:</span> Prescribe albuterol inhaler 2 puffs Q4H PRN. Order pulmonary function testing. Follow up in 4 weeks. Patient education on inhaler technique.</p>
+    </div>
+  </div>
+
+  <div class="quiz" id="q2e">
+    <h4>From the SOAP note above: What is the confirmed diagnosis the coder should code?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q2e','Persistent cough is a symptom the patient reported (Subjective), not the provider\'s diagnosis.')">Persistent cough symptom</button>
+      <button class="opt" onclick="chk(this,false,'q2e','Shortness of breath is a symptom, not the confirmed diagnosis.')">Shortness of breath symptom</button>
+      <button class="opt" onclick="chk(this,true,'q2e','Correct! New-onset asthma is the confirmed diagnosis from the Assessment section. This is what the coder codes.')">New-onset asthma diagnosis</button>
+      <button class="opt" onclick="chk(this,false,'q2e','Bilateral wheezing is an Objective finding, not the diagnosis.')">Bilateral wheezing exam finding</button>
+    </div>
+    <div class="fb" id="q2e-fb"></div>
+  </div>
+
+  <div class="quiz" id="q2f">
+    <h4>Should the coder also separately code "persistent cough" if the Assessment confirms asthma?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q2f','When a definitive diagnosis is confirmed, symptoms integral to that diagnosis are generally NOT coded separately.')">Yes — always code all symptoms mentioned</button>
+      <button class="opt" onclick="chk(this,true,'q2f','Correct! When a definitive diagnosis (asthma) is confirmed, integral symptoms like cough are NOT separately coded. The diagnosis explains them.')">No — the cough is integral to asthma and is not separately coded</button>
+    </div>
+    <div class="fb" id="q2f-fb"></div>
+  </div>
+
+  <button class="btn-comp" id="comp2" onclick="compSec(2)">✓ Mark SOAP Lab Complete</button>
+</div>
+
+<!-- ======================== PANEL 3: DX VS SX VS SVC ======================== -->
+<div class="pnl" id="p3">
+  <div class="sh purple">
+    <h2>Diagnosis vs Symptoms vs Services</h2>
+    <p>Master the distinction between confirmed diagnoses, symptoms, and the services that treat them.</p>
+  </div>
+  <div class="sprog"><span class="sprog-lbl">Progress</span><div class="sprog-bar"><div class="sprog-fill" id="prog3" style="width:0%"></div></div><span class="sprog-pct" id="pct3">0%</span></div>
+
+  <div class="cd">
+    <h3>The Key Distinction</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px">
+      <div style="background:var(--grnL);padding:14px;border-radius:var(--r);border-top:4px solid var(--grn)">
+        <h4 style="color:var(--grn)">Confirmed Diagnosis</h4>
+        <p style="font-size:12px">Provider states a definitive condition in the Assessment. <strong>Code this.</strong></p>
+        <p style="font-size:11px;margin-top:6px;color:var(--tx3)">Example: "Type 2 diabetes mellitus"</p>
+      </div>
+      <div style="background:var(--orgL);padding:14px;border-radius:var(--r);border-top:4px solid var(--org)">
+        <h4 style="color:var(--org)">Symptom</h4>
+        <p style="font-size:12px">A complaint or finding without a confirmed cause. <strong>Code ONLY if no confirmed diagnosis explains it.</strong></p>
+        <p style="font-size:11px;margin-top:6px;color:var(--tx3)">Example: "Headache" (when no underlying cause found)</p>
+      </div>
+      <div style="background:var(--priL);padding:14px;border-radius:var(--r);border-top:4px solid var(--pri)">
+        <h4 style="color:var(--pri)">Service / Procedure</h4>
+        <p style="font-size:12px">What was done for the patient. Coded with <strong>CPT or HCPCS</strong>. Goes in Item 24D.</p>
+        <p style="font-size:11px;margin-top:6px;color:var(--tx3)">Example: 99213 (Office visit)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="clt info">
+    <div class="clt-lbl">How They Connect on a Claim</div>
+    <strong>ICD-10-CM (Item 21)</strong> explains WHY → <strong>CPT/HCPCS (Item 24D)</strong> shows WHAT → <strong>Item 24E</strong> links them with a diagnosis pointer.
+  </div>
+
+  <div class="quiz" id="q3a">
+    <h4>Scenario: A patient presents with chest pain. The provider does an EKG and chest X-ray. Assessment says: "Chest pain, unspecified. Rule out cardiac etiology." What does the coder code as the diagnosis?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q3a','In outpatient coding, you do NOT code &quot;rule out&quot; conditions as if they are confirmed.')">Cardiac disease rule-out condition</button>
+      <button class="opt" onclick="chk(this,true,'q3a','Correct! Since no confirmed diagnosis was established, the coder codes the SYMPTOM — chest pain. You do not code &quot;rule out&quot; conditions in outpatient.')">Chest pain documented symptom</button>
+      <button class="opt" onclick="chk(this,false,'q3a','EKG is a procedure (CPT), not a diagnosis code.')">EKG diagnostic procedure</button>
+    </div>
+    <div class="fb" id="q3a-fb"></div>
+  </div>
+
+  <div class="quiz" id="q3b">
+    <h4>Scenario: Assessment states "Acute sinusitis." Patient also complains of headache and nasal congestion. What should the coder code?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,true,'q3b','Correct! Acute sinusitis is the confirmed diagnosis. Headache and nasal congestion are integral symptoms and are generally NOT coded separately.')">Only acute sinusitis diagnosis</button>
+      <button class="opt" onclick="chk(this,false,'q3b','When a confirmed diagnosis explains the symptoms, the symptoms are generally not coded separately.')">Sinusitis + headache + congestion</button>
+      <button class="opt" onclick="chk(this,false,'q3b','Headache alone is a symptom. The confirmed diagnosis (sinusitis) should be coded.')">Only headache symptom code</button>
+    </div>
+    <div class="fb" id="q3b-fb"></div>
+  </div>
+
+  <div class="quiz" id="q3c">
+    <h4>Which item on the CMS-1500 links the diagnosis to the procedure?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q3c','Item 21 is where diagnosis codes are listed, but it doesn\'t link them to procedures.')">Item 21</button>
+      <button class="opt" onclick="chk(this,false,'q3c','Item 24D is where procedures/services are listed.')">Item 24D</button>
+      <button class="opt" onclick="chk(this,true,'q3c','Correct! Item 24E contains the diagnosis pointer — a letter (A, B, C, D, etc.) that links each service line back to the diagnosis in Item 21.')">Item 24E</button>
+      <button class="opt" onclick="chk(this,false,'q3c','Item 24J identifies the rendering provider.')">Item 24J</button>
+    </div>
+    <div class="fb" id="q3c-fb"></div>
+  </div>
+
+  <button class="btn-comp" id="comp3" onclick="compSec(3)">✓ Mark Diagnosis vs Symptoms Complete</button>
+</div>
+
+<!-- ======================== PANEL 4: ICD-10 LOOKUP LAB ======================== -->
+<div class="pnl" id="p4">
+  <div class="sh teal">
+    <h2>ICD-10-CM Lookup Lab</h2>
+    <p>Practice using the Alphabetic Index and Tabular List — the two-step process for selecting the correct diagnosis code.</p>
+  </div>
+  <div class="sprog"><span class="sprog-lbl">Progress</span><div class="sprog-bar"><div class="sprog-fill" id="prog4" style="width:0%"></div></div><span class="sprog-pct" id="pct4">0%</span></div>
+
+  <div class="cd">
+    <h3>The Two-Step Lookup Process</h3>
+    <div style="display:flex;gap:12px;align-items:center;margin:12px 0;flex-wrap:wrap">
+      <div style="background:var(--priL);padding:12px 18px;border-radius:var(--r);font-weight:700;color:var(--pri)">Step 1: Alphabetic Index</div>
+      <span style="font-size:20px;color:var(--tx3)">→</span>
+      <div style="background:var(--grnL);padding:12px 18px;border-radius:var(--r);font-weight:700;color:var(--grn)">Step 2: Tabular List</div>
+    </div>
+    <div class="clt warn">
+      <div class="clt-lbl">⚠ Never Code from the Index Alone</div>
+      Always verify in the Tabular List. The Index gives you a suggested code — the Tabular confirms the full description, exclusions, and specificity.
+    </div>
+  </div>
+
+  <!-- Simulated Lookup -->
+  <div class="cd">
+    <h3>Practice: Look Up "Acute Pharyngitis"</h3>
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:12px">Use the simulated Index and Tabular panels below. Start by finding the main term in the Index, then verify in the Tabular.</p>
+    <div class="icd-panel">
+      <div class="icd-index">
+        <h4>📖 Alphabetic Index</h4>
+        <div class="idx-main">Pharyngitis</div>
+        <div class="idx-sub" onclick="selIdx(this,'J02.9')" data-code="J02.9">— acute J02.9</div>
+        <div class="idx-sub2" onclick="selIdx(this,'J02.0')">—— streptococcal J02.0</div>
+        <div class="idx-sub2" onclick="selIdx(this,'J02.8')">—— due to other specified organisms J02.8</div>
+        <div class="idx-sub" onclick="selIdx(this,'J31.2')">— chronic J31.2</div>
+        <div class="idx-sub" onclick="selIdx(this,'J06.9')">— see also Nasopharyngitis J06.9</div>
+        <div style="margin-top:14px"></div>
+        <div class="idx-main">Pharyngotonsillitis</div>
+        <div class="idx-sub" onclick="selIdx(this,'J06.0')">— acute J06.0</div>
+        <div style="margin-top:14px"></div>
+        <div class="idx-main">Pneumonia</div>
+        <div class="idx-sub" onclick="selIdx(this,'J18.9')">— unspecified J18.9</div>
+        <div class="idx-sub" onclick="selIdx(this,'J13')">— pneumococcal J13</div>
+      </div>
+      <div class="icd-tab">
+        <h4>📋 Tabular Verification</h4>
+        <div id="tabDisplay">
+          <p style="color:var(--tx3);font-style:italic;font-size:13px">Select a code from the Alphabetic Index to verify it here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" id="q4a">
+    <h4>After looking up "acute pharyngitis" in the Index and verifying in the Tabular, which code is correct for acute pharyngitis, unspecified?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q4a','J31.2 is chronic pharyngitis, not acute.')">J31.2 — chronic throat condition</button>
+      <button class="opt" onclick="chk(this,true,'q4a','Correct! J02.9 is the code for acute pharyngitis, unspecified. You found it in the Index and verified in the Tabular.')">J02.9 — acute pharyngitis code</button>
+      <button class="opt" onclick="chk(this,false,'q4a','J02.0 is specifically streptococcal pharyngitis. Use this only if strep is confirmed.')">J02.0 — streptococcal throat code</button>
+      <button class="opt" onclick="chk(this,false,'q4a','J06.9 is for upper respiratory infection, not specifically pharyngitis.')">J06.9 — unspecified URI code</button>
+    </div>
+    <div class="fb" id="q4a-fb"></div>
+  </div>
+
+  <div class="quiz" id="q4b">
+    <h4>If the provider's Assessment says "Streptococcal pharyngitis" (confirmed by rapid strep), which code is most accurate?</h4>
+    <div class="opts">
+      <button class="opt" onclick="chk(this,false,'q4b','J02.9 is unspecified — but we KNOW it\'s streptococcal, so we should code to the highest specificity.')">J02.9 — Acute pharyngitis, unspecified</button>
+      <button class="opt" onclick="chk(this,true,'q4b','Correct! When the causative organism (streptococcus) is confirmed, code to the highest specificity: J02.0.')">J02.0 — Streptococcal pharyngitis</button>
+      <button class="opt" onclick="chk(this,false,'q4b','J06.9 is a broader URI code, not specific to pharyngitis.')">J06.9 — URI, unspecified</button>
+    </div>
+    <div class="fb" id="q4b-fb"></div>
+  </div>
+
+  <button class="btn-comp" id="comp4" onclick="compSec(4)">✓ Mark ICD-10 Lookup Lab Complete</button>
+</div>
+
+<!-- ======================== PANEL 5: CMS-1500 PRACTICE FORM ======================== -->
+<div class="pnl" id="p5">
+  <div class="sh blue">
+    <h2>CMS-1500 Practice Form</h2>
+    <p>Learn the most important fields by filling out a practice claim form. Fill the form first; the answer key appears only after submission.</p>
+  </div>
+  <div class="sprog"><span class="sprog-lbl">Progress</span><div class="sprog-bar"><div class="sprog-fill" id="prog5" style="width:0%"></div></div><span class="sprog-pct" id="pct5">0%</span></div>
+
+  <div class="clt info">
+    <div class="clt-lbl">Instructions</div>
+    <p>Use the patient information and SOAP note below to fill out the CMS-1500 practice form. Use the case details to complete the form. Field-level answer hints are hidden until you submit.</p>
+  </div>
+
+  <!-- Patient Info for Form -->
+  <div class="pt-card">
+    <h4>📋 Patient Case for CMS-1500 Practice</h4>
+    <div class="pt-info">
+      <div><span class="lbl">Patient:</span> Sarah Johnson</div>
+      <div><span class="lbl">DOB:</span> 03/15/1985</div>
+      <div><span class="lbl">Sex:</span> Female</div>
+      <div><span class="lbl">Address:</span> 123 Oak Street, Springfield, IL 62701</div>
+      <div><span class="lbl">Insurance:</span> Blue Cross Blue Shield</div>
+      <div><span class="lbl">Member ID:</span> BCB8834521</div>
+      <div><span class="lbl">Group #:</span> GRP-4420</div>
+      <div><span class="lbl">Insured:</span> Self</div>
+    </div>
+  </div>
+
+  <div class="soap-note">
+    <p><span class="soap-lbl">S:</span> Patient reports sore throat for 3 days, difficulty swallowing, low-grade fever.</p>
+    <p><span class="soap-lbl">O:</span> Throat erythematous with tonsillar exudate. Rapid strep test positive. Temp 101.2°F.</p>
+    <p><span class="soap-lbl">A:</span> Acute streptococcal pharyngitis.</p>
+    <p><span class="soap-lbl">P:</span> Amoxicillin 500mg TID x 10 days. Follow up if symptoms persist.</p>
+    <p style="margin-top:8px"><span class="lbl">Service:</span> Office visit, established patient, low complexity (99213)</p>
+    <p><span class="lbl">Date of Service:</span> 01/15/2025</p>
+    <p><span class="lbl">Rendering Provider:</span> Dr. Maria Chen, MD — NPI: 1234567890</p>
+    <p><span class="lbl">Billing Provider:</span> Springfield Family Medicine — NPI: 0987654321</p>
+    <p><span class="lbl">Place of Service:</span> 11 (Office)</p>
+  </div>
+
+  <!-- CMS-1500 Form -->
+  <div class="cms-form">
+    <div class="cms-hdr">
+      <span>CMS-1500 PRACTICE FORM</span>
+      <button class="btn btn-sec" style="color:#fff;border-color:#fff;padding:4px 12px;font-size:11px" onclick="checkCMS()">✓ Check My Answers</button>
+    </div>
+
+    <div class="cms-section">
+      <h5>Patient & Insurance Information (Items 1–10)</h5>
+      <div class="cms-row r2">
+        <div class="cms-field">
+          <label>1a. Insured's ID Number</label>
+          <input id="f1a" placeholder="Enter member ID" data-ans="BCB8834521">
+          <div class="tip">Enter the patient's insurance member ID number. Found on their insurance card.</div>
+        </div>
+        <div class="cms-field">
+          <label>2. Patient's Name (Last, First)</label>
+          <input id="f2" placeholder="Last, First" data-ans="Johnson, Sarah">
+          <div class="tip">Enter patient name as Last Name, First Name.</div>
+        </div>
+      </div>
+      <div class="cms-row r3">
+        <div class="cms-field">
+          <label>3. Patient's DOB</label>
+          <input id="f3" placeholder="MM/DD/YYYY" data-ans="03/15/1985">
+          <div class="tip">Enter the patient's date of birth in MM/DD/YYYY format.</div>
+        </div>
+        <div class="cms-field">
+          <label>3. Sex</label>
+          <select id="f3s" data-ans="F"><option value="">Select</option><option value="M">Male</option><option value="F">Female</option></select>
+          <div class="tip">Select the patient's sex as indicated in the chart.</div>
+        </div>
+        <div class="cms-field">
+          <label>5. Patient's Address</label>
+          <input id="f5" placeholder="Street address" data-ans="123 Oak Street">
+          <div class="tip">Enter the patient's street address.</div>
+        </div>
+      </div>
+      <div class="cms-row r2">
+        <div class="cms-field">
+          <label>11. Insured's Group Number</label>
+          <input id="f11" placeholder="Group #" data-ans="GRP-4420">
+          <div class="tip">Enter the insurance group number from the patient's insurance card.</div>
+        </div>
+        <div class="cms-field">
+          <label>4. Insured's Name</label>
+          <input id="f4" placeholder="If self, enter patient name" data-ans="Johnson, Sarah">
+          <div class="tip">If the patient is the insured, enter the same name as Item 2.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cms-section">
+      <h5>Item 21 — Diagnosis Codes (ICD-10-CM)</h5>
+      <p style="font-size:11px;color:var(--tx2);margin-bottom:8px">Enter the ICD-10-CM diagnosis code(s) that explain medical necessity for the services.</p>
+      <div class="dx-grid">
+        <div class="dx-ltr">A.</div>
+        <div class="cms-field"><input id="f21a" placeholder="Primary diagnosis code" data-ans="J02.0">
+          <div class="tip">Enter the primary ICD-10-CM code for the confirmed diagnosis. From the Assessment: Acute streptococcal pharyngitis = J02.0</div>
+        </div>
+        <div class="dx-ltr">B.</div>
+        <div class="cms-field"><input id="f21b" placeholder="Secondary (if applicable)" data-ans="">
+          <div class="tip">Enter additional diagnosis codes if applicable. Leave blank if only one diagnosis.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cms-section">
+      <h5>Item 24 — Service Lines</h5>
+      <p style="font-size:11px;color:var(--tx2);margin-bottom:8px">Enter the date(s) of service, procedures, diagnosis pointers, and rendering provider.</p>
+      <div style="overflow-x:auto">
+        <table class="svc-table">
+          <thead><tr><th>24A. Date(s)</th><th>24B. POS</th><th>24D. CPT/HCPCS</th><th>24E. Dx Pointer</th><th>24J. Rendering NPI</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><input id="f24a" placeholder="MM/DD/YYYY" data-ans="01/15/2025"></td>
+              <td><input id="f24b" placeholder="POS" data-ans="11" style="width:40px"></td>
+              <td><input id="f24d" placeholder="CPT code" data-ans="99213"></td>
+              <td><input id="f24e" placeholder="A,B,C..." data-ans="A" style="width:50px"></td>
+              <td><input id="f24j" placeholder="NPI" data-ans="1234567890"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cms-section">
+      <h5>Billing Provider (Item 33)</h5>
+      <div class="cms-row r2">
+        <div class="cms-field">
+          <label>33. Billing Provider Name</label>
+          <input id="f33" placeholder="Practice/facility name" data-ans="Springfield Family Medicine">
+          <div class="tip">The billing provider is the entity submitting the claim — often the practice or facility, not the individual physician.</div>
+        </div>
+        <div class="cms-field">
+          <label>33a. Billing Provider NPI</label>
+          <input id="f33a" placeholder="NPI" data-ans="0987654321">
+          <div class="tip">The billing provider's NPI. This is often different from the rendering provider's NPI.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cmsResult" style="display:none;margin-top:16px"></div>
+
+  <div class="clt tip" style="margin-top:16px">
+    <div class="clt-lbl">Key Distinction: Rendering vs Billing Provider</div>
+    <p><strong>Rendering Provider (24J):</strong> The individual clinician who directly provided the service (Dr. Maria Chen).</p>
+    <p><strong>Billing Provider (Item 33):</strong> The entity submitting the claim — typically the practice or facility (Springfield Family Medicine).</p>
+  </div>
+
+  <button class="btn-comp" id="comp5" onclick="compSec(5)">✓ Mark CMS-1500 Practice Complete</button>
+</div>
+
+<!-- ======================== PANEL 6: MULTI-PATIENT SIMULATION ======================== -->
+<div class="pnl" id="p6">
+  <div class="sh orange">
+    <h2>Multi-Patient Simulation</h2>
+    <p>Work through 4 patient cases with increasing difficulty — read charts, identify codes, and complete claim forms just like real workflow.</p>
+  </div>
+  <div class="sprog"><span class="sprog-lbl">Patients Completed</span><div class="sprog-bar"><div class="sprog-fill" id="prog6" style="width:0%"></div></div><span class="sprog-pct" id="pct6">0/4</span></div>
+
+  <!-- Patient Selector -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">
+    <button class="wf-tab act" id="ptSel0" onclick="loadPt(0)" style="text-align:center;padding:12px 8px">
+      <div style="font-size:18px">👩</div>
+      <div style="font-size:11px;font-weight:700">Patient A</div>
+      <div style="font-size:10px;color:var(--tx3)">Beginner</div>
+      <div style="font-size:9px;margin-top:2px" id="ptDone0"></div>
+    </button>
+    <button class="wf-tab" id="ptSel1" onclick="loadPt(1)" style="text-align:center;padding:12px 8px">
+      <div style="font-size:18px">👨</div>
+      <div style="font-size:11px;font-weight:700">Patient B</div>
+      <div style="font-size:10px;color:var(--tx3)">Intermediate</div>
+      <div style="font-size:9px;margin-top:2px" id="ptDone1"></div>
+    </button>
+    <button class="wf-tab" id="ptSel2" onclick="loadPt(2)" style="text-align:center;padding:12px 8px">
+      <div style="font-size:18px">👵</div>
+      <div style="font-size:11px;font-weight:700">Patient C</div>
+      <div style="font-size:10px;color:var(--tx3)">Advanced</div>
+      <div style="font-size:9px;margin-top:2px" id="ptDone2"></div>
+    </button>
+    <button class="wf-tab" id="ptSel3" onclick="loadPt(3)" style="text-align:center;padding:12px 8px">
+      <div style="font-size:18px">👦</div>
+      <div style="font-size:11px;font-weight:700">Patient D</div>
+      <div style="font-size:10px;color:var(--tx3)">Complex</div>
+      <div style="font-size:9px;margin-top:2px" id="ptDone3"></div>
+    </button>
+  </div>
+
+  <!-- Workflow Tabs -->
+  <div class="wf-tabs" id="wfTabs">
+    <button class="wf-tab act" onclick="wfSwitch(0)">📋 Patient Card</button>
+    <button class="wf-tab" onclick="wfSwitch(1)">📝 SOAP Note</button>
+    <button class="wf-tab" onclick="wfSwitch(2)">📖 Code Lookup</button>
+    <button class="wf-tab" onclick="wfSwitch(3)">📄 Claim Form</button>
+  </div>
+
+  <!-- WF 0: Patient Card (dynamic) -->
+  <div class="sp act" id="wf0"><div id="ptCardArea"></div></div>
+
+  <!-- WF 1: SOAP Note (dynamic) -->
+  <div class="sp" id="wf1"><div id="ptSoapArea"></div></div>
+
+  <!-- WF 2: Code Lookup (dynamic) -->
+  <div class="sp" id="wf2"><div id="ptLookupArea"></div></div>
+
+  <!-- WF 3: Claim Form (dynamic) -->
+  <div class="sp" id="wf3"><div id="ptFormArea"></div></div>
+
+  <button class="btn-comp" id="comp6" onclick="compSec(6)">✓ Mark Multi-Patient Simulation Complete</button>
+</div>
+
+<!-- ======================== PANEL 7: CHALLENGE MODE ======================== -->
+<div class="pnl" id="p7">
+  <div class="sh purple">
+    <h2>Challenge Mode</h2>
+    <p>Test your skills under time pressure. Answer quickly and accurately to build your streak!</p>
+  </div>
+
+  <div id="chalArea">
+    <div style="text-align:center;margin:24px 0">
+      <div class="timer" id="chalTimer">2:00</div>
+      <button class="btn btn-pri" id="chalStart" onclick="startChal()">⚡ Start Challenge</button>
+    </div>
+
+    <div id="chalQ" style="display:none">
+      <div class="quiz" id="cq" style="border-color:var(--pur)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <h4 id="cqTitle">Question</h4>
+          <span class="bg bg-p" id="cqNum">Q1/10</span>
+        </div>
+        <p id="cqText" style="margin-bottom:10px"></p>
+        <div class="opts" id="cqOpts"></div>
+        <div class="fb" id="cq-fb"></div>
+      </div>
+    </div>
+
+    <div id="chalDone" style="display:none;text-align:center;padding:24px">
+      <h3 style="font-family:var(--hd);margin-bottom:8px">Challenge Complete!</h3>
+      <p style="font-size:18px;margin-bottom:12px">Score: <strong id="chalScore">0</strong>/10</p>
+      <button class="btn btn-pri" onclick="startChal()">🔄 Try Again</button>
+    </div>
+  </div>
+
+  <button class="btn-comp" id="comp7" onclick="compSec(7)">✓ Mark Challenge Mode Complete</button>
+</div>
+
+<!-- ======================== PANEL 8: RAPID REVIEW ======================== -->
+<div class="pnl" id="p8">
+  <div class="sh teal">
+    <h2>Rapid Review</h2>
+    <p>Quick-reference cards for everything you've learned. Use this as your study cheat sheet.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="rev-card"><h5>ICD-10-CM</h5><p>Diagnosis codes → Item 21 → Explains medical necessity (WHY)</p></div>
+    <div class="rev-card"><h5>CPT</h5><p>Procedures/services → Item 24D → Describes what was done (WHAT)</p></div>
+    <div class="rev-card"><h5>HCPCS Level II</h5><p>Supplies, equipment, drugs → Item 24D → Items not in CPT</p></div>
+    <div class="rev-card"><h5>ICD-10-PCS</h5><p>Hospital inpatient procedures ONLY → Not used on CMS-1500</p></div>
+    <div class="rev-card"><h5>Item 21 — Diagnosis</h5><p>ICD-10-CM codes listed as A, B, C, D… up to 12 diagnoses</p></div>
+    <div class="rev-card"><h5>Item 24D — Procedures</h5><p>CPT/HCPCS codes for each service line</p></div>
+    <div class="rev-card"><h5>Item 24E — Dx Pointer</h5><p>Links service line to diagnosis: "A" = first dx in Item 21</p></div>
+    <div class="rev-card"><h5>Item 24J — Rendering</h5><p>NPI of the clinician who provided the service</p></div>
+    <div class="rev-card"><h5>Item 33 — Billing Provider</h5><p>Entity submitting the claim (practice/facility + NPI)</p></div>
+    <div class="rev-card"><h5>Rendering vs Billing</h5><p>Rendering = who did it · Billing = who bills for it</p></div>
+    <div class="rev-card"><h5>SOAP: Assessment</h5><p>Contains the confirmed diagnosis — code from here</p></div>
+    <div class="rev-card"><h5>Symptom Coding Rule</h5><p>Don't code symptoms separately if a confirmed diagnosis explains them</p></div>
+    <div class="rev-card"><h5>ICD-10 Lookup Process</h5><p>Step 1: Alphabetic Index → Step 2: Tabular List verification</p></div>
+    <div class="rev-card"><h5>Outpatient Rule</h5><p>Do NOT code "rule out" or "suspected" as confirmed in outpatient</p></div>
+    <div class="rev-card"><h5>Medical Necessity</h5><p>ICD-10-CM justifies WHY each service was needed</p></div>
+    <div class="rev-card"><h5>Code to Specificity</h5><p>Always choose the most specific code supported by documentation</p></div>
+  </div>
+
+  <div class="clt tip" style="margin-top:20px">
+    <div class="clt-lbl">🎓 "If You See This, Think This" Quick Guide</div>
+    <p><strong>Sore throat + positive strep test →</strong> Code streptococcal pharyngitis (J02.0), not symptom</p>
+    <p><strong>"Rule out MI" →</strong> Outpatient: code the symptom (chest pain), NOT MI</p>
+    <p><strong>Assessment says "Type 2 DM" →</strong> E11.9 (without complications if none documented)</p>
+    <p><strong>Item 24E shows "A" →</strong> This service line is linked to the FIRST diagnosis in Item 21</p>
+    <p><strong>Two NPIs on the form →</strong> Rendering (24J) = did the work · Billing (33a) = submits the claim</p>
+  </div>
+
+  <button class="btn-comp" id="comp8" onclick="compSec(8)">✓ Mark Rapid Review Complete</button>
+</div>
+
+</main>
+
+<footer class="ftr">
+  <p>Developed and Instructed by <strong>Hilary Homaii</strong></p>
+  <p style="margin-top:3px;font-size:11px">CBCS CMS-1500 & Coding Workflow Interactive Lab</p>
+</footer>
+
+<script>
+// ===== STATE =====
+let score=0,streak=0,badges=0,sndOn=true,compSet=new Set();
+
+// ===== AUDIO =====
+let actx=null;
+function getCtx(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx}
+function tone(f,d,t='sine',v=.1){if(!sndOn)return;try{const c=getCtx(),o=c.createOscillator(),g=c.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d)}catch(e){}}
+function sndOk(){tone(523,.12);setTimeout(()=>tone(659,.12),80);setTimeout(()=>tone(784,.15),160)}
+function sndNo(){tone(330,.2,'sine',.08)}
+function sndComp(){tone(523,.1);setTimeout(()=>tone(659,.1),60);setTimeout(()=>tone(784,.1),120);setTimeout(()=>tone(1047,.25),180)}
+function toggleSnd(){sndOn=!sndOn;document.getElementById('sndBtn').textContent=sndOn?'🔊 Sound':'🔇 Muted'}
+
+// ===== SCORE =====
+function addPts(n){score+=n;document.getElementById('scoreNum').textContent=score;const t=document.getElementById('toast');t.textContent=`+${n} Points!`;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);sndOk()}
+function addStreak(){streak++;document.getElementById('streakNum').textContent=streak}
+function resetStreak(){streak=0;document.getElementById('streakNum').textContent=0}
+function addBadge(){badges++;document.getElementById('badgeNum').textContent=badges}
+
+// ===== TABS =====
+function goTab(i){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('act',parseInt(b.dataset.t)===i));
+  document.querySelectorAll('.pnl').forEach((p,j)=>{const pi=parseInt(p.id.replace('p',''));p.classList.toggle('act',pi===i)});
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>goTab(parseInt(b.dataset.t))));
+
+// ===== ACCORDION =====
+function togAcc(btn){btn.parentElement.classList.toggle('open')}
+
+// ===== QUIZ CHECK =====
+function chk(btn,correct,qid,rationale){
+  const par=btn.parentElement;
+  const fb=document.getElementById(qid+'-fb');
+  par.querySelectorAll('.opt').forEach(o=>{o.classList.add('dis')});
+  const correctBtn=[...par.querySelectorAll('.opt')].find(o=>/chk\(this,true/.test(o.getAttribute('onclick')||''));
+  if(correctBtn)correctBtn.classList.add('cor');
+  if(correct){
+    btn.classList.add('cor');fb.className='fb cor';fb.innerHTML=rationale;addPts(10);addStreak()
+  }else{
+    btn.classList.add('inc');fb.className='fb inc';fb.innerHTML=rationale+(correctBtn?`<div class="correct-answer-note">Correct answer: ${correctBtn.textContent.trim()}</div>`:'');resetStreak();sndNo()
+  }
+}
+
+// ===== ICD LOOKUP =====
+const tabData={
+  'J02.9':{code:'J02.9',desc:'Acute pharyngitis, unspecified',detail:'Includes: sore throat (acute), NOS. Excludes1: acute laryngopharyngitis (J06.0)'},
+  'J02.0':{code:'J02.0',desc:'Streptococcal pharyngitis',detail:'Sore throat due to confirmed streptococcus. Use when strep test is positive.'},
+  'J02.8':{code:'J02.8',desc:'Acute pharyngitis due to other specified organisms',detail:'Use when the causative organism is identified but is not streptococcus.'},
+  'J31.2':{code:'J31.2',desc:'Chronic pharyngitis',detail:'Chronic sore throat. Do not use for acute presentations.'},
+  'J06.9':{code:'J06.9',desc:'Acute upper respiratory infection, unspecified',detail:'Use when URI is documented without a more specific site.'},
+  'J06.0':{code:'J06.0',desc:'Acute laryngopharyngitis',detail:'Inflammation of both the larynx and pharynx.'},
+  'J18.9':{code:'J18.9',desc:'Pneumonia, unspecified organism',detail:'Use when pneumonia is documented without specifying the organism.'},
+  'J13':{code:'J13',desc:'Pneumonia due to Streptococcus pneumoniae',detail:'Pneumococcal pneumonia. Code only when organism is confirmed.'},
+  'E11.9':{code:'E11.9',desc:'Type 2 diabetes mellitus without complications',detail:'Use when DM type 2 is documented without specific complications.'},
+  'E11.65':{code:'E11.65',desc:'Type 2 diabetes mellitus with hyperglycemia',detail:'Use when type 2 DM with documented hyperglycemia.'},
+  'E10.9':{code:'E10.9',desc:'Type 1 diabetes mellitus without complications',detail:'Type 1 DM. Do not confuse with type 2.'},
+  'E66.01':{code:'E66.01',desc:'Morbid (severe) obesity due to excess calories',detail:'BMI typically 40+ or 35+ with comorbidities.'},
+  'E66.9':{code:'E66.9',desc:'Obesity, unspecified',detail:'Obesity NOS. Use when no further specification is provided.'}
+};
+
+function selIdx(el,code){
+  document.querySelectorAll('.idx-sub,.idx-sub2').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  const d=tabData[code];
+  const targets=['tabDisplay','tabDisplay2','tabDisplayMp'];
+  targets.forEach(tid=>{
+    const t=document.getElementById(tid);
+    if(t)t.innerHTML=d?`<div class="tab-entry sel"><span class="tab-code">${d.code}</span><span class="tab-desc">${d.desc}</span><p style="font-size:11px;color:var(--tx3);margin-top:6px">${d.detail}</p></div>`:'<p style="color:var(--tx3)">Code not found.</p>'
+  })
+}
+
+// ===== CMS CHECK =====
+function checkFields(fields){
+  let correct=0,total=fields.length;
+  fields.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const ans=el.dataset.ans||'';
+    const val=(el.value||'').trim();
+    if(ans===''&&val===''){correct++;el.style.borderColor='var(--grn)';return}
+    if(val.toLowerCase()===ans.toLowerCase()){correct++;el.style.borderColor='var(--grn)';el.style.background='var(--grnL)'}
+    else{el.style.borderColor='var(--red)';el.style.background='var(--redL)'}
+  });
+  return{correct,total}
+}
+
+function buildAnswerKeyTable(fields){
+  const rows=fields.map(id=>{
+    const el=document.getElementById(id); if(!el)return '';
+    const label=(el.closest('.cms-field')?.querySelector('label')?.textContent || el.getAttribute('placeholder') || id).trim();
+    const ans=(el.dataset.ans||'').trim();
+    const shown=ans===''?'Leave blank / not applicable':ans;
+    return `<tr><td>${label}</td><td>${shown}</td><td>${id}</td></tr>`;
+  }).join('');
+  return `<table class="answer-key-table"><thead><tr><th>Field</th><th>Correct Answer</th><th>Field ID</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function checkCMS(){
+  const fields=['f1a','f2','f3','f3s','f5','f11','f4','f21a','f21b','f24a','f24b','f24d','f24e','f24j','f33','f33a'];
+  const r=checkFields(fields);
+  const el=document.getElementById('cmsResult');
+  el.style.display='block';
+  const status=r.correct>=r.total-1
+    ? `<div class="clt tip"><div class="clt-lbl">Submission Result</div>${r.correct}/${r.total} fields correct. Strong CMS-1500 workflow.</div>`
+    : `<div class="clt warn"><div class="clt-lbl">Submission Result</div>${r.correct}/${r.total} fields correct. Review the complete answer key below.</div>`;
+  el.innerHTML=status+`<div class="cd"><h3>CMS-1500 Answer Key</h3>${buildAnswerKeyTable(fields)}</div>`;
+  if(r.correct>=r.total-1)addPts(25);
+}
+function checkCMSMulti(){
+  const pt=patients[curPt];
+  const ids=pt.formFields.map(f=>f.id);
+  const r=checkFields(ids);
+  const el=document.getElementById('mpResult');
+  el.style.display='block';
+  const status=r.correct>=r.total-1
+    ? `<div class="clt tip"><div class="clt-lbl">Submission Result</div>${r.correct}/${r.total} fields correct for Patient ${pt.label}.</div>`
+    : `<div class="clt warn"><div class="clt-lbl">Submission Result</div>${r.correct}/${r.total} fields correct. Review the complete answer key below.</div>`;
+  el.innerHTML=status+`<div class="cd"><h3>Patient ${pt.label} Answer Key</h3>${buildAnswerKeyTable(ids)}</div>`;
+  if(r.correct>=r.total-1 && !ptCompleted.has(curPt)){
+    ptCompleted.add(curPt);addPts(30);document.getElementById('ptDone'+curPt).innerHTML='<span class="bg bg-g">✓ Done</span>';document.getElementById('pct6').textContent=ptCompleted.size+'/4';document.getElementById('prog6').style.width=(ptCompleted.size/4*100)+'%';
+  }
+}
+// ===== PATIENT DATA =====
+const ptCompleted=new Set();
+let curPt=0;
+
+const patients=[
+  // PATIENT A — Beginner
+  {
+    label:'A',icon:'👩',name:'Maria Garcia',dob:'05/12/1990',sex:'F',
+    address:'789 Elm Court, Springfield, IL 62703',
+    insurance:'UnitedHealthcare',memberId:'UHC3349821',group:'GRP-2210',insured:'Self',
+    rendering:'Dr. Lisa Wong, MD',renderNPI:'1112223344',
+    billing:'Springfield Urgent Care',billNPI:'5566778899',
+    pos:'11',dos:'03/05/2025',
+    soap:{
+      s:'28-year-old female presents with painful urination for 2 days. Reports urinary frequency and urgency. Denies fever, flank pain, or vaginal discharge.',
+      o:'Temp 98.6°F. Abdomen soft, non-tender. CVA tenderness absent. UA: positive for nitrites and leukocyte esterase. Urine culture sent.',
+      a:'Acute uncomplicated urinary tract infection (UTI).',
+      p:'Prescribe nitrofurantoin 100mg BID x 5 days. Increase fluid intake. Follow up if symptoms worsen or do not resolve. Office visit, established patient, low complexity (99213).'
+    },
+    quizQ:'What is the confirmed diagnosis from the Assessment?',
+    quizOpts:['Painful urination','Urinary frequency','Acute uncomplicated UTI','Positive urine culture'],
+    quizAns:2,
+    quizRat:['Painful urination (dysuria) is a symptom reported by the patient — Subjective.','Urinary frequency is a symptom, not a confirmed diagnosis.','Correct! Acute uncomplicated UTI is the confirmed diagnosis from the Assessment section.','Positive UA is an Objective finding — a lab result, not the diagnosis itself.'],
+    indexEntries:[
+      {type:'main',text:'Infection'},
+      {type:'sub',text:'— urinary tract N39.0',code:'N39.0'},
+      {type:'sub2',text:'—— complicating pregnancy O23.1-',code:'O23.1'},
+      {type:'main',text:'Cystitis'},
+      {type:'sub',text:'— acute N30.00',code:'N30.00'},
+      {type:'sub',text:'— unspecified N30.90',code:'N30.90'},
+      {type:'main',text:'Dysuria'},
+      {type:'sub',text:'— R30.0',code:'R30.0'}
+    ],
+    lookupQ:'For "Acute uncomplicated UTI," which code is correct?',
+    lookupOpts:['R30.0 — Dysuria','N39.0 — Urinary tract infection, site not specified','N30.00 — Acute cystitis without hematuria'],
+    lookupAns:1,
+    lookupRat:['R30.0 is a symptom code for painful urination — the diagnosis is UTI, not just the symptom.','Correct! N39.0 is the appropriate code for urinary tract infection, site not specified.','N30.00 is specifically acute cystitis. Unless the provider documents cystitis specifically, UTI NOS (N39.0) matches the Assessment.'],
+    formFields:[
+      {id:'mpf1a',label:'1a. Member ID',ans:'UHC3349821',tip:'Patient insurance member ID'},
+      {id:'mpf2',label:'2. Patient Name',ans:'Garcia, Maria',tip:'Last, First format'},
+      {id:'mpf21a',label:'21A. Primary Dx',ans:'N39.0',tip:'UTI = N39.0'},
+      {id:'mpf24a',label:'24A. Date',ans:'03/05/2025',tip:'Date of service'},
+      {id:'mpf24b',label:'24B. POS',ans:'11',tip:'Place of service: 11 = Office'},
+      {id:'mpf24d',label:'24D. CPT',ans:'99213',tip:'Office visit, established, low complexity'},
+      {id:'mpf24e',label:'24E. Pointer',ans:'A',tip:'Links to first dx in Item 21'},
+      {id:'mpf24j',label:'24J. Rendering NPI',ans:'1112223344',tip:'Dr. Lisa Wong NPI'},
+      {id:'mpf33',label:'33. Billing Name',ans:'Springfield Urgent Care',tip:'Practice submitting the claim'},
+      {id:'mpf33a',label:'33a. Billing NPI',ans:'5566778899',tip:'Billing provider NPI'}
+    ]
+  },
+  // PATIENT B — Intermediate
+  {
+    label:'B',icon:'👨',name:'Robert Williams',dob:'07/22/1968',sex:'M',
+    address:'456 Maple Ave, Springfield, IL 62702',
+    insurance:'Aetna',memberId:'AET7721034',group:'GRP-8815',insured:'Self',
+    rendering:'Dr. James Park, DO',renderNPI:'5556667777',
+    billing:'Midwest Internal Medicine',billNPI:'1112223333',
+    pos:'11',dos:'02/10/2025',
+    soap:{
+      s:'56-year-old male presents for follow-up of type 2 diabetes. Reports good compliance with metformin. Occasional blurry vision. No chest pain or shortness of breath.',
+      o:'BP 138/82. BMI 31.2. Fasting glucose 142 mg/dL. HbA1c 7.4%. Foot exam: intact sensation bilaterally. Fundoscopic exam deferred to ophthalmology.',
+      a:'1. Type 2 diabetes mellitus without complications, not at goal. 2. Obesity.',
+      p:'Increase metformin to 1000mg BID. Refer to ophthalmology for diabetic eye exam. Reinforce dietary counseling. Labs in 3 months. Office visit, established patient, moderate complexity (99214).'
+    },
+    quizQ:'What are the confirmed diagnoses to code?',
+    quizOpts:['Blurry vision + diabetes','Type 2 DM + Obesity','Diabetes + Hypertension','Only diabetes'],
+    quizAns:1,
+    quizRat:['Blurry vision is a Subjective symptom, not in the Assessment.','Correct! Both Type 2 DM and Obesity appear in the Assessment as confirmed diagnoses.','Hypertension is NOT in the Assessment — the BP reading is Objective data only.','Obesity is also listed as a confirmed diagnosis in the Assessment.'],
+    indexEntries:[
+      {type:'main',text:'Diabetes'},
+      {type:'sub',text:'— type 2, without complications E11.9',code:'E11.9'},
+      {type:'sub',text:'— type 2, with hyperglycemia E11.65',code:'E11.65'},
+      {type:'sub',text:'— type 1, without complications E10.9',code:'E10.9'},
+      {type:'main',text:'Obesity'},
+      {type:'sub',text:'— due to excess calories E66.01',code:'E66.01'},
+      {type:'sub',text:'— unspecified E66.9',code:'E66.9'}
+    ],
+    lookupQ:'For "Type 2 DM without complications," which code?',
+    lookupOpts:['E11.65','E11.9','E10.9'],
+    lookupAns:1,
+    lookupRat:['E11.65 indicates hyperglycemia, which is not stated in the Assessment.','Correct! E11.9 = Type 2 diabetes mellitus without complications.','E10.9 is Type 1 diabetes — this patient has Type 2.'],
+    formFields:[
+      {id:'mpf1a',label:'1a. Member ID',ans:'AET7721034',tip:'Aetna member ID'},
+      {id:'mpf2',label:'2. Patient Name',ans:'Williams, Robert',tip:'Last, First'},
+      {id:'mpf21a',label:'21A. Primary Dx',ans:'E11.9',tip:'Type 2 DM without complications'},
+      {id:'mpf21b',label:'21B. Secondary Dx',ans:'E66.9',tip:'Obesity, unspecified'},
+      {id:'mpf24a',label:'24A. Date',ans:'02/10/2025',tip:'Date of service'},
+      {id:'mpf24b',label:'24B. POS',ans:'11',tip:'Office'},
+      {id:'mpf24d',label:'24D. CPT',ans:'99214',tip:'Office visit, established, moderate complexity'},
+      {id:'mpf24e',label:'24E. Pointer',ans:'A,B',tip:'Links to both dx A and B in Item 21'},
+      {id:'mpf24j',label:'24J. Rendering NPI',ans:'5556667777',tip:'Dr. James Park NPI'},
+      {id:'mpf33',label:'33. Billing Name',ans:'Midwest Internal Medicine',tip:'Practice name'},
+      {id:'mpf33a',label:'33a. Billing NPI',ans:'1112223333',tip:'Billing NPI'}
+    ]
+  },
+  // PATIENT C — Advanced (symptom-only coding)
+  {
+    label:'C',icon:'👵',name:'Dorothy Chen',dob:'11/03/1945',sex:'F',
+    address:'22 River Road, Springfield, IL 62704',
+    insurance:'Medicare',memberId:'1EG4TE5MK72',group:'N/A',insured:'Self',
+    rendering:'Dr. Ahmed Hassan, MD',renderNPI:'9998887766',
+    billing:'Premier Medical Associates',billNPI:'4443332211',
+    pos:'11',dos:'04/18/2025',
+    soap:{
+      s:'79-year-old female presents with dizziness and lightheadedness for 1 week. Reports episodes occur when standing up quickly. No syncope, no chest pain, no vision changes. History of hypertension on lisinopril.',
+      o:'BP sitting 148/88, BP standing 118/70 (orthostatic drop). HR 78 regular. Neurological exam: no focal deficits. Romberg negative. CBC and BMP within normal limits.',
+      a:'1. Dizziness — likely orthostatic hypotension. Etiology to be determined. 2. Hypertension, essential.',
+      p:'Reduce lisinopril dose. Advise slow position changes and adequate hydration. Orthostatic BP monitoring at home. Return in 2 weeks. If symptoms persist, order tilt table test. Office visit, established patient, moderate complexity (99214).'
+    },
+    quizQ:'The Assessment says "Dizziness — likely orthostatic hypotension. Etiology to be determined." How should the coder handle this?',
+    quizOpts:['Code orthostatic hypotension as confirmed','Code dizziness (the symptom) since no definitive diagnosis is confirmed','Code nothing because it says "to be determined"','Code hypertension only'],
+    quizAns:1,
+    quizRat:['The provider says "likely" and "etiology to be determined" — this is NOT a confirmed diagnosis. You cannot code it as confirmed in outpatient.','Correct! In outpatient, when the provider uses words like "likely," "probable," or "to be determined," you code the SYMPTOM (dizziness). Also code the confirmed hypertension.','You still have codeable information — the symptom and the confirmed hypertension.','Hypertension is one diagnosis, but the visit was primarily for dizziness — code both.'],
+    indexEntries:[
+      {type:'main',text:'Dizziness'},
+      {type:'sub',text:'— R42',code:'R42'},
+      {type:'main',text:'Hypotension'},
+      {type:'sub',text:'— orthostatic I95.1',code:'I95.1'},
+      {type:'sub',text:'— drug-induced I95.2',code:'I95.2'},
+      {type:'main',text:'Hypertension'},
+      {type:'sub',text:'— essential (primary) I10',code:'I10'},
+      {type:'sub',text:'— secondary I15.9',code:'I15.9'},
+      {type:'main',text:'Syncope'},
+      {type:'sub',text:'— R55',code:'R55'}
+    ],
+    lookupQ:'What is the correct primary code for this visit?',
+    lookupOpts:['I95.1 — Orthostatic hypotension','R42 — Dizziness and giddiness','I10 — Essential hypertension'],
+    lookupAns:1,
+    lookupRat:['Orthostatic hypotension is NOT confirmed — the provider said "likely" and "etiology to be determined." Do not code unconfirmed conditions in outpatient.','Correct! R42 (dizziness) is the symptom code. Since the underlying cause is not confirmed, code the symptom as primary. Also code I10 for the confirmed hypertension.','I10 is a valid secondary code, but the visit was primarily for dizziness.'],
+    formFields:[
+      {id:'mpf1a',label:'1a. Member ID',ans:'1EG4TE5MK72',tip:'Medicare ID'},
+      {id:'mpf2',label:'2. Patient Name',ans:'Chen, Dorothy',tip:'Last, First'},
+      {id:'mpf21a',label:'21A. Primary Dx',ans:'R42',tip:'Dizziness — symptom coded because no confirmed etiology'},
+      {id:'mpf21b',label:'21B. Secondary Dx',ans:'I10',tip:'Essential hypertension — confirmed in Assessment'},
+      {id:'mpf24a',label:'24A. Date',ans:'04/18/2025',tip:'Date of service'},
+      {id:'mpf24b',label:'24B. POS',ans:'11',tip:'Office'},
+      {id:'mpf24d',label:'24D. CPT',ans:'99214',tip:'Office visit, established, moderate complexity'},
+      {id:'mpf24e',label:'24E. Pointer',ans:'A,B',tip:'Links to dx A (dizziness) and B (HTN)'},
+      {id:'mpf24j',label:'24J. Rendering NPI',ans:'9998887766',tip:'Dr. Ahmed Hassan NPI'},
+      {id:'mpf33',label:'33. Billing Name',ans:'Premier Medical Associates',tip:'Billing entity'},
+      {id:'mpf33a',label:'33a. Billing NPI',ans:'4443332211',tip:'Billing NPI'}
+    ]
+  },
+  // PATIENT D — Complex (multiple service lines)
+  {
+    label:'D',icon:'👦',name:'Tyler Brooks',dob:'09/28/2018',sex:'M',
+    address:'510 Pine Street, Springfield, IL 62701',
+    insurance:'Medicaid',memberId:'MCD88412903',group:'N/A',insured:'Brooks, Angela (Mother)',
+    rendering:'Dr. Susan Rivera, MD',renderNPI:'7778889900',
+    billing:'Springfield Pediatric Group',billNPI:'6665554433',
+    pos:'11',dos:'05/20/2025',
+    soap:{
+      s:'6-year-old male brought in by mother for well-child visit. No acute complaints. Mother reports he is doing well in school. Up to date on immunizations except for annual flu shot. No allergies.',
+      o:'Ht 45 inches (50th percentile). Wt 46 lbs (50th percentile). BMI 15.9. HEENT normal. Heart RRR, no murmur. Lungs CTA. Abdomen soft. Skin clear. Development appropriate for age. Vision screening: 20/20 bilaterally.',
+      a:'1. Well-child examination, age 6. 2. Influenza vaccination administered today.',
+      p:'Administered influenza vaccine (quadrivalent, preservative-free, 0.5mL IM). Anticipatory guidance provided to mother. Return in 1 year for next well-child visit. Preventive visit (99393). Vaccine administration (90460). Flu vaccine supply (90686).'
+    },
+    quizQ:'This visit has multiple services. How many service lines are needed on the CMS-1500?',
+    quizOpts:['1 — just the office visit','2 — the visit plus the vaccine','3 — preventive visit, vaccine administration, and vaccine supply'],
+    quizAns:2,
+    quizRat:['There are additional services beyond the visit — the vaccine administration and the vaccine product itself.','Close, but the vaccine supply (the actual vaccine product) is a separate HCPCS code from the administration.','Correct! Three service lines: 99393 (preventive visit), 90460 (vaccine administration), and 90686 (flu vaccine supply). Each gets its own line in Item 24.'],
+    indexEntries:[
+      {type:'main',text:'Examination'},
+      {type:'sub',text:'— child (well-child) Z00.129',code:'Z00.129'},
+      {type:'sub',text:'— with abnormal findings Z00.121',code:'Z00.121'},
+      {type:'main',text:'Encounter'},
+      {type:'sub',text:'— for immunization Z23',code:'Z23'},
+      {type:'main',text:'Influenza'},
+      {type:'sub',text:'— vaccination encounter Z23',code:'Z23'},
+      {type:'main',text:'History'},
+      {type:'sub',text:'— personal, immunization Z28.9',code:'Z28.9'}
+    ],
+    lookupQ:'What is the primary diagnosis code for this well-child visit?',
+    lookupOpts:['Z23 — Encounter for immunization','Z00.129 — Encounter for routine child health exam without abnormal findings','Z00.121 — Encounter for routine child health exam with abnormal findings'],
+    lookupAns:1,
+    lookupRat:['Z23 is the code for the immunization encounter — it is a secondary code, not the primary reason for the visit.','Correct! Z00.129 is the primary code for a routine well-child exam when no abnormal findings are documented. Z23 would be a secondary code for the immunization.','Z00.121 is for exams WITH abnormal findings — this child had normal findings.'],
+    formFields:[
+      {id:'mpf1a',label:'1a. Member ID',ans:'MCD88412903',tip:'Medicaid member ID'},
+      {id:'mpf2',label:'2. Patient Name',ans:'Brooks, Tyler',tip:'Last, First'},
+      {id:'mpf4',label:'4. Insured Name',ans:'Brooks, Angela',tip:'The mother is the insured (Medicaid)'},
+      {id:'mpf21a',label:'21A. Primary Dx',ans:'Z00.129',tip:'Well-child exam without abnormal findings'},
+      {id:'mpf21b',label:'21B. Secondary Dx',ans:'Z23',tip:'Encounter for immunization'},
+      {id:'mpf24d1',label:'24D Line 1. CPT',ans:'99393',tip:'Preventive visit, established, age 5-11'},
+      {id:'mpf24e1',label:'24E Line 1. Pointer',ans:'A',tip:'Links to well-child dx'},
+      {id:'mpf24d2',label:'24D Line 2. CPT',ans:'90460',tip:'Vaccine administration'},
+      {id:'mpf24e2',label:'24E Line 2. Pointer',ans:'B',tip:'Links to immunization encounter dx'},
+      {id:'mpf24d3',label:'24D Line 3. HCPCS',ans:'90686',tip:'Influenza vaccine supply (quadrivalent)'},
+      {id:'mpf24e3',label:'24E Line 3. Pointer',ans:'B',tip:'Links to immunization encounter'},
+      {id:'mpf24j',label:'24J. Rendering NPI',ans:'7778889900',tip:'Dr. Susan Rivera NPI'},
+      {id:'mpf33',label:'33. Billing Name',ans:'Springfield Pediatric Group',tip:'Practice name'},
+      {id:'mpf33a',label:'33a. Billing NPI',ans:'6665554433',tip:'Billing NPI'}
+    ]
+  }
+];
+
+function shuffledIndexed(arr){return arr.map((v,i)=>({v,i})).sort(()=>Math.random()-0.5)}
+
+// ===== RENDER PATIENT =====
+function loadPt(idx){
+  curPt=idx;
+  document.querySelectorAll('[id^="ptSel"]').forEach((b,i)=>b.classList.toggle('act',i===idx));
+  wfSwitch(0);
+  renderPtCard();renderPtSoap();renderPtLookup();renderPtForm();
+}
+
+function renderPtCard(){
+  const p=patients[curPt];
+  document.getElementById('ptCardArea').innerHTML=`
+    <div class="pt-card">
+      <h4>${p.icon} Patient ${p.label}: ${p.name}</h4>
+      <div class="pt-info">
+        <div><span class="lbl">DOB:</span> ${p.dob}</div>
+        <div><span class="lbl">Sex:</span> ${p.sex==='F'?'Female':'Male'}</div>
+        <div><span class="lbl">Address:</span> ${p.address}</div>
+        <div><span class="lbl">Insurance:</span> ${p.insurance}</div>
+        <div><span class="lbl">Member ID:</span> ${p.memberId}</div>
+        <div><span class="lbl">Group #:</span> ${p.group}</div>
+        <div><span class="lbl">Insured:</span> ${p.insured}</div>
+      </div>
+    </div>
+    <div class="clt info">
+      <div class="clt-lbl">Provider Information</div>
+      <p><strong>Rendering:</strong> ${p.rendering} — NPI: ${p.renderNPI}</p>
+      <p><strong>Billing:</strong> ${p.billing} — NPI: ${p.billNPI}</p>
+      <p><strong>Place of Service:</strong> ${p.pos} (Office)</p>
+      <p><strong>Date of Service:</strong> ${p.dos}</p>
+    </div>
+    <button class="btn btn-pri" onclick="wfSwitch(1)">Next: View SOAP Note →</button>`;
+}
+
+function renderPtSoap(){
+  const p=patients[curPt];
+  const qid='mpq1_'+curPt;
+  let optsHtml=shuffledIndexed(p.quizOpts).map(({v:o,i})=>`<button class="opt" onclick="chkMp(this,${i===p.quizAns},${i},'${qid}')">${o}</button>`).join('');
+  document.getElementById('ptSoapArea').innerHTML=`
+    <div class="soap-note">
+      <p><span class="soap-lbl">S:</span> ${p.soap.s}</p>
+      <p><span class="soap-lbl">O:</span> ${p.soap.o}</p>
+      <p><span class="soap-lbl">A:</span> ${p.soap.a}</p>
+      <p><span class="soap-lbl">P:</span> ${p.soap.p}</p>
+    </div>
+    <div class="quiz" id="${qid}">
+      <h4>${p.quizQ}</h4>
+      <div class="opts">${optsHtml}</div>
+      <div class="fb" id="${qid}-fb"></div>
+    </div>
+    <button class="btn btn-pri" onclick="wfSwitch(2)">Next: Look Up Codes →</button>`;
+}
+
+function chkMp(btn,correct,optIdx,qid){
+  const p=patients[curPt];
+  const par=btn.parentElement;
+  const fb=document.getElementById(qid+'-fb');
+  par.querySelectorAll('.opt').forEach(o=>o.classList.add('dis'));
+  const rat=p.quizRat[optIdx];
+  if(correct){btn.classList.add('cor');fb.className='fb cor';fb.textContent=rat;addPts(10);addStreak()}
+  else{btn.classList.add('inc');fb.className='fb inc';fb.textContent=rat;resetStreak();sndNo()}
+}
+
+function renderPtLookup(){
+  const p=patients[curPt];
+  let idxHtml='<h4>📖 Alphabetic Index</h4>';
+  p.indexEntries.forEach(e=>{
+    if(e.type==='main')idxHtml+=`<div class="idx-main">${e.text}</div>`;
+    else if(e.type==='sub')idxHtml+=`<div class="idx-sub" onclick="selIdx(this,'${e.code}')">${e.text}</div>`;
+    else idxHtml+=`<div class="idx-sub2" onclick="selIdx(this,'${e.code}')">${e.text}</div>`;
+  });
+
+  const lqid='mplq_'+curPt;
+  let lOptsHtml=shuffledIndexed(p.lookupOpts).map(({v:o,i})=>`<button class="opt" onclick="chkLk(this,${i===p.lookupAns},${i},'${lqid}')">${o}</button>`).join('');
+
+  document.getElementById('ptLookupArea').innerHTML=`
+    <div class="icd-panel">
+      <div class="icd-index">${idxHtml}</div>
+      <div class="icd-tab"><h4>📋 Tabular Verification</h4><div id="tabDisplayMp"><p style="color:var(--tx3);font-style:italic;font-size:13px">Click a code in the Index to verify it here.</p></div></div>
+    </div>
+    <div class="quiz" id="${lqid}">
+      <h4>${p.lookupQ}</h4>
+      <div class="opts">${lOptsHtml}</div>
+      <div class="fb" id="${lqid}-fb"></div>
+    </div>
+    <button class="btn btn-pri" onclick="wfSwitch(3)">Next: Fill Claim Form →</button>`;
+}
+
+function chkLk(btn,correct,optIdx,qid){
+  const p=patients[curPt];
+  const par=btn.parentElement;
+  const fb=document.getElementById(qid+'-fb');
+  par.querySelectorAll('.opt').forEach(o=>o.classList.add('dis'));
+  const rat=p.lookupRat[optIdx];
+  if(correct){btn.classList.add('cor');fb.className='fb cor';fb.textContent=rat;addPts(10);addStreak()}
+  else{btn.classList.add('inc');fb.className='fb inc';fb.textContent=rat;resetStreak();sndNo()}
+}
+
+function renderPtForm(){
+  const p=patients[curPt];
+  let fieldsHtml='';
+  const dxFields=p.formFields.filter(f=>f.id.includes('21'));
+  const svcFields=p.formFields.filter(f=>f.id.includes('24'));
+  const otherFields=p.formFields.filter(f=>!f.id.includes('21')&&!f.id.includes('24'));
+  const patInsFields=otherFields.filter(f=>f.id.includes('1a')||f.id.includes('mpf2')||f.id.includes('mpf4'));
+  const billFields=otherFields.filter(f=>f.id.includes('33'));
+
+  let patHtml=patInsFields.map(f=>`<div class="cms-field"><label>${f.label}</label><input id="${f.id}" placeholder="Enter..." data-ans="${f.ans}"><div class="tip">${f.tip}</div></div>`).join('');
+
+  let dxHtml=dxFields.map((f,i)=>`<div class="dx-ltr">${String.fromCharCode(65+i)}.</div><div class="cms-field"><input id="${f.id}" placeholder="${f.label.replace(/21[AB]\.\s*/,'')}" data-ans="${f.ans}"><div class="tip">${f.tip}</div></div>`).join('');
+
+  // Group service lines
+  const lineNums=new Set();
+  svcFields.forEach(f=>{const m=f.id.match(/(\d)$/);if(m)lineNums.add(m[1]);else lineNums.add('0')});
+  let svcRows='';
+  if(lineNums.size<=1||!svcFields.some(f=>f.id.match(/\d$/)&&parseInt(f.id.match(/\d$/)[0])>1)){
+    // Simple single line
+    svcRows=`<tr>${['24a','24b','24d','24e','24j'].map(k=>{
+      const fld=svcFields.find(f=>f.id.includes(k))||p.formFields.find(f=>f.id.includes(k));
+      return fld?`<td><input id="${fld.id}" placeholder="${fld.label.split('.')[1]||''}" data-ans="${fld.ans}" style="${k.includes('24b')||k.includes('24e')?'width:50px':''}"></td>`:'<td></td>';
+    }).join('')}</tr>`;
+  } else {
+    // Multiple lines
+    for(let ln=1;ln<=3;ln++){
+      const dFld=svcFields.find(f=>f.id.includes('24d'+ln));
+      const eFld=svcFields.find(f=>f.id.includes('24e'+ln));
+      const jFld=svcFields.find(f=>f.id.includes('24j'));
+      const aFld=p.formFields.find(f=>f.id.includes('24a'));
+      const bFld=p.formFields.find(f=>f.id.includes('24b'));
+      if(!dFld)continue;
+      svcRows+=`<tr>
+        <td><input id="${aFld?aFld.id+'_l'+ln:'mpf24a_l'+ln}" placeholder="Date" data-ans="${p.dos}" style="width:90px"></td>
+        <td><input id="${bFld?bFld.id+'_l'+ln:'mpf24b_l'+ln}" placeholder="POS" data-ans="${p.pos}" style="width:40px"></td>
+        <td><input id="${dFld.id}" placeholder="Code" data-ans="${dFld.ans}"></td>
+        <td><input id="${eFld?eFld.id:''}" placeholder="Ptr" data-ans="${eFld?eFld.ans:''}" style="width:50px"></td>
+        <td>${ln===1&&jFld?`<input id="${jFld.id}" placeholder="NPI" data-ans="${jFld.ans}">`:(ln===1?'':'')}</td>
+      </tr>`;
+    }
+  }
+
+  let billHtml=billFields.map(f=>`<div class="cms-field"><label>${f.label}</label><input id="${f.id}" placeholder="Enter..." data-ans="${f.ans}"><div class="tip">${f.tip}</div></div>`).join('');
+
+  document.getElementById('ptFormArea').innerHTML=`
+    <div class="cms-form">
+      <div class="cms-hdr"><span>CMS-1500 — Patient ${p.label}: ${p.name}</span>
+        <button class="btn btn-sec" style="color:#fff;border-color:#fff;padding:4px 12px;font-size:11px" onclick="checkCMSMulti()">✓ Check My Answers</button>
+      </div>
+      <div class="cms-section">
+        <h5>Patient & Insurance</h5>
+        <div class="cms-row r2">${patHtml}</div>
+      </div>
+      <div class="cms-section">
+        <h5>Item 21 — Diagnosis Codes (ICD-10-CM)</h5>
+        <div class="dx-grid">${dxHtml}</div>
+      </div>
+      <div class="cms-section">
+        <h5>Item 24 — Service Lines</h5>
+        <div style="overflow-x:auto">
+          <table class="svc-table">
+            <thead><tr><th>24A. Date</th><th>24B. POS</th><th>24D. CPT/HCPCS</th><th>24E. Pointer</th><th>24J. Rendering NPI</th></tr></thead>
+            <tbody>${svcRows}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cms-section">
+        <h5>Billing Provider (Item 33)</h5>
+        <div class="cms-row r2">${billHtml}</div>
+      </div>
+    </div>
+    <div id="mpResult" style="display:none;margin-top:12px"></div>
+    <div class="clt info" style="margin-top:12px">
+      <div class="clt-lbl">Reminder</div>
+      <p><strong>Rendering (24J):</strong> ${p.rendering} — the clinician who provided the service.</p>
+      <p><strong>Billing (33):</strong> ${p.billing} — the entity submitting the claim.</p>
+    </div>`;
+}
+
+// Add more tabular data for new codes
+Object.assign(tabData,{
+  'N39.0':{code:'N39.0',desc:'Urinary tract infection, site not specified',detail:'Use for UTI when the specific site is not documented. Excludes: neonatal UTI (P39.3).'},
+  'N30.00':{code:'N30.00',desc:'Acute cystitis without hematuria',detail:'Acute infection of the bladder. Use only when cystitis is specifically documented.'},
+  'N30.90':{code:'N30.90',desc:'Cystitis, unspecified without hematuria',detail:'Cystitis NOS. Use when type is not specified.'},
+  'R30.0':{code:'R30.0',desc:'Dysuria',detail:'Painful urination. This is a SYMPTOM code — use when no underlying cause is confirmed.'},
+  'O23.1':{code:'O23.1',desc:'Infections of bladder in pregnancy',detail:'UTI complicating pregnancy. Requires additional code for trimester.'},
+  'I10':{code:'I10',desc:'Essential (primary) hypertension',detail:'High blood pressure. Includes: arterial hypertension, benign/malignant hypertension.'},
+  'I95.1':{code:'I95.1',desc:'Orthostatic hypotension',detail:'Low blood pressure upon standing. Use only when confirmed by provider.'},
+  'I95.2':{code:'I95.2',desc:'Hypotension due to drugs',detail:'Drug-induced low blood pressure. Code the adverse effect first if applicable.'},
+  'R42':{code:'R42',desc:'Dizziness and giddiness',detail:'Light-headedness, vertigo NOS. SYMPTOM code — use when no confirmed underlying cause.'},
+  'I15.9':{code:'I15.9',desc:'Secondary hypertension, unspecified',detail:'Hypertension caused by an underlying condition.'},
+  'R55':{code:'R55',desc:'Syncope and collapse',detail:'Fainting. Use when no underlying cause is confirmed.'},
+  'Z00.129':{code:'Z00.129',desc:'Encounter for routine child health examination without abnormal findings',detail:'Well-child visit. Use for routine preventive visit in pediatric patients.'},
+  'Z00.121':{code:'Z00.121',desc:'Encounter for routine child health examination with abnormal findings',detail:'Well-child visit when abnormal findings are documented.'},
+  'Z23':{code:'Z23',desc:'Encounter for immunization',detail:'Use as additional code when vaccines are administered during a visit.'},
+  'Z28.9':{code:'Z28.9',desc:'Immunization not carried out, unspecified reason',detail:'When immunization was not performed.'}
+});
+
+// Init first patient
+loadPt(0);
+
+// ===== WORKFLOW TABS =====
+function compSec(i){
+  if(compSet.has(i))return;
+  compSet.add(i);
+  const btn=document.getElementById('comp'+i);
+  btn.classList.add('dn');btn.innerHTML='✓ Section Complete!';
+  document.querySelector(`.nav-btn[data-t="${i}"]`)?.classList.add('done');
+  document.getElementById('gProgFill').style.width=Math.round(compSet.size/9*100)+'%';
+  addPts(25);addBadge();sndComp()
+}
+
+// ===== CHALLENGE MODE =====
+const chalQs=[
+  {q:'Which code set supports medical necessity on a CMS-1500?',opts:['CPT','ICD-10-CM','HCPCS Level II','ICD-10-PCS'],ans:1},
+  {q:'Where do diagnosis codes go on the CMS-1500?',opts:['Item 24D','Item 24E','Item 21','Item 33'],ans:2},
+  {q:'Where do CPT/HCPCS procedure codes go?',opts:['Item 21','Item 24D','Item 24J','Item 33'],ans:1},
+  {q:'What is the main purpose of Item 24E?',opts:['Connects two claim parts','Shows payer group number','Names the provider type','Lists the visit location'],ans:0},
+  {q:'Item 24J identifies which provider?',opts:['Billing provider','Referring provider','Rendering provider','Ordering provider'],ans:2},
+  {q:'In outpatient coding, how do you handle a "rule out" condition?',opts:['Code it as confirmed','Code the documented symptom','Skip the whole encounter','Use inpatient procedure coding'],ans:1},
+  {q:'The Assessment section of a SOAP note usually contains:',opts:['Patient statements','Measured findings','Provider impression','Follow-up instructions'],ans:2},
+  {q:'When a confirmed condition explains a symptom, should the symptom be separately coded?',opts:['Yes, every time','No, not usually','Only by patient request','Only for office visits'],ans:1},
+  {q:'ICD-10-PCS is used for:',opts:['Office visit services','Professional claims','Inpatient procedures','Diagnosis reporting'],ans:2},
+  {q:'The billing provider is typically:',opts:['Person taking vitals','Individual clinician','Practice or facility','Insurance payer'],ans:2}
+];
+let chalIdx=0,chalCorrect=0,chalTimerInt=null;
+
+function startChal(){
+  chalIdx=0;chalCorrect=0;
+  document.getElementById('chalDone').style.display='none';
+  document.getElementById('chalStart').style.display='none';
+  document.getElementById('chalQ').style.display='block';
+  showChalQ();
+  let secs=120;
+  document.getElementById('chalTimer').textContent='2:00';
+  clearInterval(chalTimerInt);
+  chalTimerInt=setInterval(()=>{
+    secs--;
+    const m=Math.floor(secs/60),s=secs%60;
+    document.getElementById('chalTimer').textContent=`${m}:${s.toString().padStart(2,'0')}`;
+    if(secs<=0){clearInterval(chalTimerInt);endChal()}
+  },1000)
+}
+
+function showChalQ(){
+  if(chalIdx>=chalQs.length){endChal();return}
+  const q=chalQs[chalIdx];
+  document.getElementById('cqNum').textContent=`Q${chalIdx+1}/${chalQs.length}`;
+  document.getElementById('cqText').textContent=q.q;
+  const optsDiv=document.getElementById('cqOpts');
+  optsDiv.innerHTML='';
+  document.getElementById('cq-fb').className='fb';
+  document.getElementById('cq-fb').textContent='';
+
+  shuffledIndexed(q.opts).forEach(({v:o,i})=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.textContent=o;
+    btn.dataset.correct=(i===q.ans).toString();
+    btn.onclick=()=>chalAnswer(btn);
+    optsDiv.appendChild(btn);
+  });
+}
+
+function chalAnswer(btn){
+  const buttons=[...document.querySelectorAll('#cqOpts .opt')];
+  const fb=document.getElementById('cq-fb');
+  const correctBtn=buttons.find(b=>b.dataset.correct==='true');
+
+  buttons.forEach(b=>b.classList.add('dis'));
+
+  if(btn.dataset.correct==='true'){
+    btn.classList.add('cor');
+    fb.className='fb cor';
+    fb.textContent='Correct!';
+    chalCorrect++;
+    addPts(10);
+    addStreak();
+  }else{
+    btn.classList.add('inc');
+    if(correctBtn)correctBtn.classList.add('cor');
+    fb.className='fb inc';
+    fb.textContent='Incorrect.';
+    resetStreak();
+    sndNo();
+  }
+
+  setTimeout(()=>{chalIdx++;showChalQ()},1200);
+}
+
+function endChal(){
+  clearInterval(chalTimerInt);
+  document.getElementById('chalQ').style.display='none';
+  document.getElementById('chalDone').style.display='block';
+  document.getElementById('chalScore').textContent=chalCorrect;
+  document.getElementById('chalStart').style.display='inline-flex';
+  if(chalCorrect>=8)addBadge()
+}
+
+// ===== WORKFLOW TABS =====
+function wfSwitch(i){
+  document.querySelectorAll('#wfTabs .wf-tab').forEach((t,j)=>t.classList.toggle('act',j===i));
+  ['wf0','wf1','wf2','wf3'].forEach((id,j)=>{const el=document.getElementById(id);if(el)el.classList.toggle('act',j===i)})
+}
+
+// ===== MOBILE =====
+function toggleMobStats(){const s=document.querySelector('.hdr-stats');if(s)s.style.display=getComputedStyle(s).display==='none'?'flex':'none'}
+
+// ===== PULSE ANIM =====
+const style=document.createElement('style');
+style.textContent='@keyframes pulse{0%,100%{box-shadow:0 4px 14px rgba(21,101,192,.25)}50%{box-shadow:0 4px 28px rgba(21,101,192,.45)}}';
+document.head.appendChild(style);
+
+
+// ===== UNBIASED OPTION ORDER + HIDE LIVE ANSWERS PATCH =====
+function shuffleChildren(container){
+  const nodes=[...container.children];
+  for(let i=nodes.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    container.appendChild(nodes[j]);
+    nodes.splice(j,1);
+  }
+}
+function shuffleStaticQuizOptions(){document.querySelectorAll('.opts').forEach(shuffleChildren)}
+function removeLiveCmsHints(){document.querySelectorAll('.cms-field .tip').forEach(t=>t.remove())}
+document.addEventListener('DOMContentLoaded',()=>{shuffleStaticQuizOptions();removeLiveCmsHints()});
+
+</script>
+</body>
+</html>
